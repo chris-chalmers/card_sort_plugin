@@ -1,0 +1,300 @@
+.embed-code {
+    background: #efefef;
+    padding: 20px;
+}
+
+
+.clearfix:before,.clearfix:after{content:" ";display:table;}
+.clearfix:after{clear:both;}
+
+.color-box{
+	width:1em;
+	height: 1em;
+	vertical-align: middle;
+}
+
+#adminmenu .wp-menu-image img {
+    max-width: 24px;
+}
+
+.wp-switch-editor {
+    display: none!important;
+}
+/*//hide customize button*/
+a.button.button-primary.customize {
+    display: none;
+}
+.hide-if-no-customize{
+    display: none!important;
+}
+
+/*hide jetpack form btn*/
+#insert-jetpack-contact-form{
+    display: none;
+}
+/*/hide preview post button/*/
+div#submitdiv #preview-action {
+    display: none;
+}
+
+/*hide ninja forms button*/
+div#nf_admin_metaboxes_appendaform{
+    display: none;
+}
+
+.color-box.blue{
+	background-color: #044673
+}
+
+.color-box.green{
+	background-color: #005F63
+}
+
+.color-box.gold{
+	background-color: #FDB913
+}
+
+.color-box.red{
+	background-color: #D27349
+}
+
+.anthrohack_metabox_option{
+    margin-bottom: 15px;
+}
+
+/*.postbox.layout-section .anthrohack_metabox_option {
+    width: 43%;
+    float: left;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 15px;
+    border: solid 1px #999;
+}
+
+.postbox.layout-section .anthrohack_metabox_option.color_selector {
+    width: 90%;
+}*/
+
+.anthrohack_metabox_option .settings-description,
+.anthrohack_metabox_option .option-description {
+	margin-top:0;
+	display: block;
+    margin-bottom: 7px;
+}
+
+.anthrohack_metabox_option .caption {
+    font-size: 0.85em;
+}
+
+.anthrohack_metabox_option .form-table th {
+    padding-top: 15px;
+}
+
+div.preview-image {
+    background-size: cover!important;
+    background-color: #cfcfcf!important;
+    width:100px;
+    /*background-repeat: no-repeat!important; */
+}
+
+div.field-pattern_overlay div.preview-image{
+    background-size: initial!important;
+    background-repeat: repeat; 
+}
+
+#field_logo div.preview-image,
+#field_logo_light div.preview-image,
+#field_anthrohack_favicvon div.preview-image{
+    background-size: contain!important;
+    background-repeat: repeat; 
+}
+
+#field_anthrohack_favicvon div.preview-image{
+    width: 16px!important;
+    height: 16px!important;
+}
+
+.anthrohack_metabox_option.video .preview-image{
+    display: block;
+}
+
+input.full-width {
+    width: 100%;
+}
+
+.anthrohack_metabox_option.required label:after{
+	content: "*";
+}
+
+label.error {
+    color: red!important;
+}
+
+.sections-wrap .buttons{
+	margin: 0 0 10px 0;
+}
+
+.anthrohack_metabox_option .title {
+    font-weight: bold;
+    margin-bottom: 0px;
+    margin-top: 15px;
+    display: block;
+}
+
+.anthrohack_metabox_option .filename {
+    display: block;
+}
+
+div#field_heading_font .font-field {
+    font-size: 2em;
+}
+div#field_sub_heading_font .font-field {
+    font-size: 1.5em;
+}
+
+.slider input{
+    /*display: block!important;*/
+}
+
+.slider.slider-horizontal .slider-tick,
+.slider.slider-horizontal .tooltip-inner, 
+.slider.slider-horizontal .tooltip-arrow {
+    display: none;
+}
+
+.slider.slider-horizontal .slider-handle {
+    margin-top: 35px!important;
+}
+
+.slider.slider-horizontal .slider-tick-label {
+    cursor: pointer;
+}
+
+.anthrohack_metabox_option.color_selector .color {
+    padding: 10px;
+    display: inline-block;
+    color: #fff;
+    width: 41%;
+    float: left;
+}
+
+.postbox.layout-section h3.hndle {
+    background: #666;
+    /*color: #fff;*/
+}
+
+.postbox.layout-section.dark h3.hndle {
+    color: #333;
+}
+
+.postbox.layout-section.light h3.hndle {
+    color: #fff;
+}
+
+.postbox.layout-section.dark h3.hndle,
+.postbox.layout-section.dark .postbox-button,
+.postbox.layout-section.dark button.handlediv.toggle span{
+    color: #333;
+}
+
+button.handlediv.toggle {
+    z-index: -1;
+}
+
+.postbox.layout-section.closed .container{
+    display: none;
+}
+
+.postbox.layout-section .container{
+    padding:1em;
+}
+
+.postbox.layout-section div.postbox-button {
+    float: right;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: 0 0;
+    cursor: pointer;
+    text-align: center;
+    line-height: 34px;
+    display: block;
+}
+
+.postbox.layout-section.light div.postbox-button,
+.postbox.layout-section.light .handlediv.toggle .toggle-indicator{
+    color:#fff;
+}
+
+.postbox.layout-section .disabled-label{
+    display: none;
+}
+
+.postbox.layout-section.disabled .disabled-label{
+    display: inline;
+}
+
+.postbox.layout-section.disabled,
+.postbox.layout-section.disabled .hndle.title.heading.ui-sortable-handle {
+    color: #999!important;
+}
+
+.postbox.layout-section .postbox-button.disable .fa-eye-slash,
+.postbox.layout-section.disabled .postbox-button.disable .fa-eye{
+    display: inline-block;
+}
+
+.postbox.layout-section .postbox-button.disable .fa-eye,
+.postbox.layout-section.disabled .postbox-button.disable .fa-eye-slash{
+    display: none;
+}
+
+/************************/
+/*responsive breakpoints*/
+/************************/
+
+/*only for mobile*/
+@media screen and (max-width: 767px) {
+
+
+    
+
+}
+/*ipad & small desktops*/
+@media screen and (min-width: 480px){
+
+
+}
+
+/*desktop*/
+@media screen and (min-width: 768px) {
+
+    /*.anthrohack_metabox_option.half {
+        width: 45%;
+        display: inline-block;
+        margin-right: 5%;
+    }*/
+
+    .anthrohack_metabox_option.color_selector .color {
+        padding: 7px;
+        width: 27%;
+        height: 20px;
+        font-size: 0.75em;
+    }
+
+}
+
+/*large*/
+@media screen and (min-width: 992px) { 
+
+
+    
+}
+
+/*xxx large*/
+@media screen and (min-width: 1200px) {
+
+ 
+}
