@@ -96,10 +96,18 @@ function anthrohack_study_options_callback ( $post )  {
     
 }//end study options callback
 
+// utility for rendering a button for adding sections in front or back end
+function buttons($hidden = false, $type = "section"){ 
+    if(!$hidden) $hidden = "";
+    ?>
+    <div class="buttons <?php echo $hidden; ?>" >
+        <a type="button" class="add-section button" data-type="<?php echo $type; ?>"><i class="fa fa-plus" aria-hidden="true"></i> Add <?php echo $type; ?></a>
+    </div>
+<?php }
 
 /**
 * questions!
-* Draggable questions for questions 
+* Draggable sections for questions 
 **/
 function anthrohack_study_questions_callback ( $post )  {
     wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
@@ -111,7 +119,7 @@ function anthrohack_study_questions_callback ( $post )  {
     <div class="questions-wrap">
         <?php buttons(false, "question"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_questions" id="anthrohack_questions" value='<?php echo $anthrohack_questions; ?>' >
-        <div id="anthrohack_questions_fields" class="meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
+        <div id="anthrohack_questions_fields" class="layout-sections meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
 
                 <?php 
                 
@@ -174,64 +182,13 @@ function anthrohack_question_meta_template($question = Null){
      
     if($question == Null){
         $question = array(
-            "question_title" => "question_template",
-            "question_slug" => "question_template"
+            "section_title" => "questions_template",
+            "section_slug" => "questions_template"
         );
     }
-
-    $title = anthrohack_check_meta_var($question, "question_title", "");
-    $slug = anthrohack_check_meta_var($question, "question_slug", strtolower(str_replace(' ', '_', $title)), "");
-    $order = anthrohack_check_meta_var($question, "question_order", "");
-    $disabled = anthrohack_check_meta_var($question, "question_disabled", "");
-    $closed = anthrohack_check_meta_var($question, "question_closed", "closed");
-    $color_class = anthrohack_check_meta_var($question, $slug."_color_scheme", "");
-    $color_field = anthrohack_check_meta_var($question, $slug . "_background_color");
-    $color_field2 = anthrohack_check_meta_var($question, $slug . "_background_color2");
-    $color_angle = anthrohack_check_meta_var($question, $slug . "_gradient_angle", "90");
-    $transparency_field = anthrohack_check_meta_var($question, $slug . "_background_transparency");
-
-    $handle_style = "";
-    if($color_field){
-        //if there's one color
-        $handle_style .= 'style="background-color: '.$color_field.'"';
-        
-        //overwrite with gradient code if there's two.
-        if($color_field2) //not .= but = because we're over-writing
-            $handle_style = 'style="background-color: transparent; background-image: linear-gradient('.$color_angle.'deg, '.$color_field.', '.$color_field2.');"';
-    }
-
-    // var_dump($color_class);
-
-    // $question is an object containing all the params for that question ?>
-    <div id="<?php echo str_replace(' ', '_', strtolower($title)); ?>" class="postbox layout-question <?php echo $color_class; ?> <?php echo $closed; ?> <?php echo $disabled; ?>">
-        <button class="handlediv toggle" aria-expanded="true"><span class="screen-reader-text">Toggle question</span><span class="toggle-indicator" aria-hidden="true"></span></button>
-        <!-- <div class="postbox-button disable" alt="Disable"><span class="screen-reader-text">Disable question</span><i class="fa fa-eye-slash" aria-hidden="true"></i><i class="fa fa-eye" aria-hidden="true"></i></i></div> -->
-        <div class="postbox-button delete" alt="Delete"><span class="screen-reader-text">Delete question</span><i class="fa fa-trash" aria-hidden="true"></i></div>
-        <div class="postbox-button copy" alt="Copy"><span class="screen-reader-text">Copy question</span><i class="fa fa-clone" aria-hidden="true"></i></div>
-        <div class="postbox-button rename" alt="Rename"><span class="screen-reader-text">Rename question</span><i class="fa fa-pencil"></i></div>
-        <h3 class="hndle title heading" <?php echo $handle_style; ?> >
-            <span class="text"><?php echo anthrohack_check_meta_var($question, "question_title", ""); ?></span>
-            <span class="disabled-label"> - Disabled </span>
-        </h3>
-        <input type="hidden" class="hidden-input" name="question_title" id="question_title" value="<?php echo $title;?>" >
-        <input type="hidden" class="hidden-input" name="question_slug" id="question_slug" value="<?php echo $slug;?>" >
-        <input type="hidden" class="hidden-input" name="question_order" id="question_order" value="<?php echo $order;?>" >
-        <input type="hidden" class="hidden-input" name="question_disabled" id="question_disabled" value="<?php echo $disabled;?>" >
-        <input type="hidden" class="hidden-input" name="question_closed" id="question_closed" value="<?php echo $closed;?>" >
-
-            <div class="container">
-                    <div class="question-slug">question slug = <span class="slug"><?php echo $slug; ?></slug></div> 
-                    <?php //render question settings
-                    
-                    foreach ($anthrohack_questions_fields as $revision_field_array) {
-                        echo anthrohack_render_meta_field($revision_field_array, $question);
-                    } 
-                ?>
-                <div class="clearfix"></div>
-            </div>
-            
-    </div><!-- .postbox -->
-<?php }
+     
+    anthrohack_render_section($anthrohack_questions_fields, $question);
+}
 //end Questions
 
 /**
@@ -248,7 +205,7 @@ function anthrohack_study_cards_callback ( $post )  {
     <div class="cards-wrap">
         <?php buttons(false, "card"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_cards" id="anthrohack_cards" value='<?php echo $anthrohack_cards; ?>' >
-        <div id="anthrohack_cards_fields" class="meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
+        <div id="anthrohack_cards_fields" class="meta-box-sortables ui-sortable layout-sections" data-id="<?php echo $post->ID; ?>">
 
                 <?php 
                 
@@ -384,24 +341,31 @@ function anthrohack_card_meta_template($card = Null){
         ),
 
     );
-     
+
     if($card == Null){
         $card = array(
-            "card_title" => "card_template",
-            "card_slug" => "card_template"
+            "section_title" => "cards_template",
+            "section_slug" => "cards_template"
         );
     }
+     
+    anthrohack_render_section($anthrohack_cards_fields, $card);
+}
+//end Cards
 
-    $title = anthrohack_check_meta_var($card, "card_title", "");
-    $slug = anthrohack_check_meta_var($card, "card_slug", strtolower(str_replace(' ', '_', $title)), "");
-    $order = anthrohack_check_meta_var($card, "card_order", "");
-    $disabled = anthrohack_check_meta_var($card, "card_disabled", "");
-    $closed = anthrohack_check_meta_var($card, "card_closed", "closed");
-    $color_class = anthrohack_check_meta_var($card, $slug."_color_scheme", "");
-    $color_field = anthrohack_check_meta_var($card, $slug . "_background_color");
-    $color_field2 = anthrohack_check_meta_var($card, $slug . "_background_color2");
-    $color_angle = anthrohack_check_meta_var($card, $slug . "_gradient_angle", "90");
-    $transparency_field = anthrohack_check_meta_var($card, $slug . "_background_transparency");
+//general function for rendering sections (used by sections and sections)
+function anthrohack_render_section($fields, $section){
+
+    $title = anthrohack_check_meta_var($section, "section_title", "");
+    $slug = anthrohack_check_meta_var($section, "section_slug", strtolower(str_replace(' ', '_', $title)), "");
+    $order = anthrohack_check_meta_var($section, "section_order", "");
+    $disabled = anthrohack_check_meta_var($section, "section_disabled", "");
+    $closed = anthrohack_check_meta_var($section, "section_closed", "closed");
+    $color_class = anthrohack_check_meta_var($section, $slug."_color_scheme", "");
+    $color_field = anthrohack_check_meta_var($section, $slug . "_background_color");
+    $color_field2 = anthrohack_check_meta_var($section, $slug . "_background_color2");
+    $color_angle = anthrohack_check_meta_var($section, $slug . "_gradient_angle", "90");
+    $transparency_field = anthrohack_check_meta_var($section, $slug . "_background_transparency");
 
     $handle_style = "";
     if($color_field){
@@ -413,39 +377,37 @@ function anthrohack_card_meta_template($card = Null){
             $handle_style = 'style="background-color: transparent; background-image: linear-gradient('.$color_angle.'deg, '.$color_field.', '.$color_field2.');"';
     }
 
-    // var_dump($color_class);
 
-    // $card is an object containing all the params for that card ?>
-    <div id="<?php echo str_replace(' ', '_', strtolower($title)); ?>" class="postbox layout-card <?php echo $color_class; ?> <?php echo $closed; ?> <?php echo $disabled; ?>">
-        <button class="handlediv toggle" aria-expanded="true"><span class="screen-reader-text">Toggle Card</span><span class="toggle-indicator" aria-hidden="true"></span></button>
-        <!-- <div class="postbox-button disable" alt="Disable"><span class="screen-reader-text">Disable Card</span><i class="fa fa-eye-slash" aria-hidden="true"></i><i class="fa fa-eye" aria-hidden="true"></i></i></div> -->
-        <div class="postbox-button delete" alt="Delete"><span class="screen-reader-text">Delete Card</span><i class="fa fa-trash" aria-hidden="true"></i></div>
-        <div class="postbox-button copy" alt="Copy"><span class="screen-reader-text">Copy Card</span><i class="fa fa-clone" aria-hidden="true"></i></div>
-        <div class="postbox-button rename" alt="Rename"><span class="screen-reader-text">Rename Card</span><i class="fa fa-pencil"></i></div>
+    // $section is an object containing all the params for that section ?>
+    <div id="<?php echo str_replace(' ', '_', strtolower($title)); ?>" class="postbox layout-section <?php echo $color_class; ?> <?php echo $closed; ?> <?php echo $disabled; ?>">
+        <button class="handlediv toggle" aria-expanded="true"><span class="screen-reader-text">Toggle section</span><span class="toggle-indicator" aria-hidden="true"></span></button>
+        <!-- <div class="postbox-button disable" alt="Disable"><span class="screen-reader-text">Disable section</span><i class="fa fa-eye-slash" aria-hidden="true"></i><i class="fa fa-eye" aria-hidden="true"></i></i></div> -->
+        <div class="postbox-button delete" alt="Delete"><span class="screen-reader-text">Delete section</span><i class="fa fa-trash" aria-hidden="true"></i></div>
+        <div class="postbox-button copy" alt="Copy"><span class="screen-reader-text">Copy section</span><i class="fa fa-clone" aria-hidden="true"></i></div>
+        <div class="postbox-button rename" alt="Rename"><span class="screen-reader-text">Rename section</span><i class="fa fa-pencil"></i></div>
         <h3 class="hndle title heading" <?php echo $handle_style; ?> >
-            <span class="text"><?php echo anthrohack_check_meta_var($card, "card_title", ""); ?></span>
+            <span class="text"><?php echo anthrohack_check_meta_var($section, "section_title", ""); ?></span>
             <span class="disabled-label"> - Disabled </span>
         </h3>
-        <input type="hidden" class="hidden-input" name="card_title" id="card_title" value="<?php echo $title;?>" >
-        <input type="hidden" class="hidden-input" name="card_slug" id="card_slug" value="<?php echo $slug;?>" >
-        <input type="hidden" class="hidden-input" name="card_order" id="card_order" value="<?php echo $order;?>" >
-        <input type="hidden" class="hidden-input" name="card_disabled" id="card_disabled" value="<?php echo $disabled;?>" >
-        <input type="hidden" class="hidden-input" name="card_closed" id="card_closed" value="<?php echo $closed;?>" >
+        <input type="hidden" class="hidden-input" name="section_title" id="section_title" value="<?php echo $title;?>" >
+        <input type="hidden" class="hidden-input" name="section_slug" id="section_slug" value="<?php echo $slug;?>" >
+        <input type="hidden" class="hidden-input" name="section_order" id="section_order" value="<?php echo $order;?>" >
+        <input type="hidden" class="hidden-input" name="section_disabled" id="section_disabled" value="<?php echo $disabled;?>" >
+        <input type="hidden" class="hidden-input" name="section_closed" id="section_closed" value="<?php echo $closed;?>" >
 
             <div class="container">
-                    <div class="card-slug">card slug = <span class="slug"><?php echo $slug; ?></slug></div> 
-                    <?php //render card settings
+                    <div class="section-slug">section slug = <span class="slug"><?php echo $slug; ?></slug></div> 
+                    <?php //render section settings
                     
-                    foreach ($anthrohack_cards_fields as $revision_field_array) {
-                        echo anthrohack_render_meta_field($revision_field_array, $card);
+                    foreach ($fields as $revision_field_array) {
+                        echo anthrohack_render_meta_field($revision_field_array, $section);
                     } 
                 ?>
                 <div class="clearfix"></div>
             </div>
             
-    </div><!-- .postbox -->
-<?php }
-//end Cards
+    </div><!-- .postbox --> 
+<?php } //end section
 
 //NOTE buttons() function is found in main plugin file (card_sort_plugin.php)
 

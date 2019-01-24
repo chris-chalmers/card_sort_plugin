@@ -104,11 +104,13 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 					}
 
 				}else{ // show "add pile" button ?>
+
 					<div class="board-column pile" id="<?php echo $pile->slug; ?>" data-id="<?php echo $pile->id; ?>">
 						<div class="board-column-content">
 							<button class="add-more-items btn btn-primary"><i class="material-icons"></i>Add more items</button>
 						</div>
 					</div>
+					
 				} ?>
 				
 			</div> <?php //end board ?>

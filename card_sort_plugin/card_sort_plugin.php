@@ -260,15 +260,6 @@ function anthrohack_check_meta_var($meta, $variable, $fallback = false){
     return $fallback;
 }
 
-// utility for rendering a button for adding sections in front or back end
-function buttons($hidden = false, $type = "section"){ 
-    if(!$hidden) $hidden = "";
-    ?>
-    <div class="buttons <?php echo $hidden; ?>" >
-        <a type="button" class="add-<?php echo $type; ?> button"><i class="fa fa-plus" aria-hidden="true"></i> Add <?php echo $type; ?></a>
-    </div>
-<?php }
-
 // utility for returnong pase path of the installed plugin
 function plugin_base_path(){
     return plugin_dir_path( __FILE__ );
