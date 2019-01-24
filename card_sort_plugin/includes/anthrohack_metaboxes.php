@@ -383,7 +383,7 @@ function anthrohack_render_section($fields, $section){
         <button class="handlediv toggle" aria-expanded="true"><span class="screen-reader-text">Toggle section</span><span class="toggle-indicator" aria-hidden="true"></span></button>
         <!-- <div class="postbox-button disable" alt="Disable"><span class="screen-reader-text">Disable section</span><i class="fa fa-eye-slash" aria-hidden="true"></i><i class="fa fa-eye" aria-hidden="true"></i></i></div> -->
         <div class="postbox-button delete" alt="Delete"><span class="screen-reader-text">Delete section</span><i class="fa fa-trash" aria-hidden="true"></i></div>
-        <div class="postbox-button copy" alt="Copy"><span class="screen-reader-text">Copy section</span><i class="fa fa-clone" aria-hidden="true"></i></div>
+        <div class="postbox-button copy" alt="Copy"><span class="screen-reader-text">Copy section</span><i class="fa fa-copy" aria-hidden="true"></i></div>
         <div class="postbox-button rename" alt="Rename"><span class="screen-reader-text">Rename section</span><i class="fa fa-pencil"></i></div>
         <h3 class="hndle title heading" <?php echo $handle_style; ?> >
             <span class="text"><?php echo anthrohack_check_meta_var($section, "section_title", ""); ?></span>
