@@ -614,6 +614,9 @@ function anthrohack_meta_save( $post_id ) {
         "min_cards",
         "email",
         "cards_instructions",
+        "anthrohack_questions",
+        "anthrohack_cards",
+        "anthrohack_piles",
     );
 
     foreach($revision_field_array as $field){

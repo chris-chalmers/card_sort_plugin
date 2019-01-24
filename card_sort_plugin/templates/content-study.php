@@ -73,7 +73,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 											<?php } ?>
 										</div>
 									</div>
-								<? }
+								<? } //end foreach
 							}
 						}	
 					} ?>
@@ -107,11 +107,11 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 					<div class="board-column pile" id="<?php echo $pile->slug; ?>" data-id="<?php echo $pile->id; ?>">
 						<div class="board-column-content">
-							<button class="add-more-items btn btn-primary"><i class="material-icons"></i>Add more items</button>
+							<button class="add-more-items btn btn-primary"><i class="fa fa-icon-plus"></i>Add more items</button>
 						</div>
 					</div>
 					
-				} ?>
+				<?php } ?>
 				
 			</div> <?php //end board ?>
 		</div>

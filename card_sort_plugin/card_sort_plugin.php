@@ -63,21 +63,22 @@ if ( ! function_exists( 'anthrohack_enqueue_admin' ) ) :
 	    wp_enqueue_media();
 		wp_enqueue_script('media-upload');
 
+        //styles
+        wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
+        wp_enqueue_style('bootstrap_slider_css', plugins_url('/includes/css/bootstrap-slider.min.css', __FILE__ ));
+        wp_enqueue_style('admin_css', plugins_url('/includes/css/anthrohack_admin.css', __FILE__ ));
+            
 		// wp_enqueue_script('suggest');
 		wp_enqueue_script( 'wp-color-picker');
 		wp_enqueue_script('image_upload', plugins_url( '/includes/js/anthrohack_image_upload.js' , __FILE__ ), array( 'jquery' ), false, true );
 		wp_enqueue_script('validate_js', 'https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js', array('jquery'));
-        // wp_enqueue_script('bootstrap_slider_js', plugins_url( '/includes/js/bootstrap-slider.min.js' , __FILE__ ), array( 'jquery' ), false, true );
+        wp_enqueue_script('bootstrap_slider_js', plugins_url( '/includes/js/bootstrap-slider.min.js' , __FILE__ ), array( 'jquery' ), false, true );
         wp_enqueue_script( 'wp_tinymce_js', plugins_url( '/includes/js/tinymce/wordpress-tinymce.js' , __FILE__ ) , array( 'jquery' ), false, true );
 		wp_enqueue_script('admin_js', plugins_url( '/includes/js/anthrohack_admin.js' , __FILE__ ), array( 'jquery', 'wp-color-picker', 'wp_tinymce_js', 'media-editor' ) );
         wp_localize_script('admin_js', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
 
-		//styles
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
-		wp_enqueue_style('bootstrap_slider_css', plugins_url('/includes/css/bootstrap-slider.min.css', __FILE__ ));
-		wp_enqueue_style('admin_css', plugins_url('/includes/css/anthrohack_admin.css', __FILE__ ));
-	
+
 	}
 	add_action( 'admin_enqueue_scripts', 'anthrohack_enqueue_admin' );
 
@@ -88,33 +89,33 @@ endif;
 * // (have to create taxonomy before post type)
 **/
 
-function anthrohack_create_taxonomies() {
+// function anthrohack_create_taxonomies() {
 
-    $args = array(
-        'hierarchical'      => true,
-        'labels'            => array(
-            'name'              => _x( 'Piles', 'taxonomy general name' ),
-            'singular_name'     => _x( 'Pile', 'taxonomy singular name' ),
-            'search_items'      => __( 'Search Piles' ),
-            'all_items'         => __( 'All Piles' ),
-            'parent_item'       => __( 'Parent Piles' ),
-            'parent_item_colon' => __( 'Parent Piles:' ),
-            'edit_item'         => __( 'Edit Pile' ),
-            'update_item'       => __( 'Update Pile' ),
-            'add_new_item'      => __( 'Add New Pile' ),
-            'new_item_name'     => __( 'New Job Pile' ),
-            'menu_name'         => __( 'Job Piles' ),
-        ),
-        'show_ui'           => true,
-        'show_admin_column' => true,
-        'query_var'         => true,
-        'rewrite'           => array( 'slug' => "pile" ),
-    );
-    register_taxonomy( "pile", "card", $args );
+//     $args = array(
+//         'hierarchical'      => true,
+//         'labels'            => array(
+//             'name'              => _x( 'Piles', 'taxonomy general name' ),
+//             'singular_name'     => _x( 'Pile', 'taxonomy singular name' ),
+//             'search_items'      => __( 'Search Piles' ),
+//             'all_items'         => __( 'All Piles' ),
+//             'parent_item'       => __( 'Parent Piles' ),
+//             'parent_item_colon' => __( 'Parent Piles:' ),
+//             'edit_item'         => __( 'Edit Pile' ),
+//             'update_item'       => __( 'Update Pile' ),
+//             'add_new_item'      => __( 'Add New Pile' ),
+//             'new_item_name'     => __( 'New Job Pile' ),
+//             'menu_name'         => __( 'Job Piles' ),
+//         ),
+//         'show_ui'           => true,
+//         'show_admin_column' => true,
+//         'query_var'         => true,
+//         'rewrite'           => array( 'slug' => "pile" ),
+//     );
+//     register_taxonomy( "pile", "card", $args );
     
 
-}
-add_action( 'init', 'anthrohack_create_taxonomies', 0 );
+// }
+// add_action( 'init', 'anthrohack_create_taxonomies', 0 );
 
 /**
 * Add custom Post Types.
@@ -134,24 +135,6 @@ function anthrohack_create_post_type() {
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array('title', 'revisions'),
-        'description' => ""
-
-        )
-    );
-
-    register_post_type( 'card',
-        array(
-            'labels' => array(
-                'name' => __( 'Cards' ),
-                'singular_name' => __( 'Card' ),
-                'edit_item' => 'Edit Card',
-                'add_new_item' => 'Add New Card',
-                'view_item' => 'View Card'
-            ),
-        'public' => true,
-        'show_in_rest' => true,
-        'has_archive' => false,
-        'supports' => array('title', 'editor', 'revisions'),
         'description' => ""
 
         )

@@ -6,7 +6,7 @@
 		handle_draggable_sections('questions');
 		handle_draggable_sections('cards');
 		handle_color_picker();
-		// handle_sliders();
+		handle_sliders();
 		handle_checkboxes();
 		
 	}); //end doc ready
@@ -217,13 +217,13 @@
 					//init colorpicker
 					$(template).find(".anthrohack-color-picker").wpColorPicker({
 						change : function(){
-							update_layout_section_json(input_id);
+							update_layout_section_json(section);
 						}
 					});
 
 					//update json field with new section
 					// console.log("new section");
-					update_layout_section_json(input_id);
+					update_layout_section_json(section);
 				}
 				
 			});
@@ -238,65 +238,81 @@
 		$.each($(".section-wrap"), function(i, _this){
 			var sections = $(_this).find(".layout-section");
 			$.each(sections, function(j,_section){
-				console.log( $(_section).attr("id") + j );
+				// console.log( $(_section).attr("id") + j );
 				$(_section).find("input#section_order").val(j); 
 			});
 		});
 		console.log("reordered sections");
 	}
 
-	//update layoutsections json in hidden field\
-	function update_layout_section_json(section_id){
-	// 	var json_all = [];
+	//update layoutsections json in hidden field
+	function update_layout_section_json(section){
+		var json_all = [];
+		var section_id = "#anthrohack_study_" + section; 
+		var template_id = "#" + section + "_template"; 
+		var fields_id = "#anthrohack_" + section + "_fields"; 
+		var input_id = "#anthrohack_" + section; //the ID of the hidden input where the json will be stored
 
-	// 	$.each($(section_id + "_fields .postbox"), function(i, _pb){
+		$.each($(fields_id).find(".postbox"), function(i, _pb){
 
-	// 		// console.log(i);
-	// 		//push serialized section fields to array of all sections
-	// 		var section_serialized = $(_pb).find("select, textarea, input").serializeArray();
-	// 		var section_json = serialized_to_json(section_serialized);
+			// console.log(i);
+			//push serialized section fields to array of all sections
+			var section_serialized = $(_pb).find("select, textarea, input").serializeArray();
+			var section_json = serialized_to_json(section_serialized);
 			
-	// 		//checkbox helper
-	// 		var checkbox_array = $(_pb).find("input[type=checkbox]");
-	// 		$.each(checkbox_array, function(i, _this){
-	// 			if(section_json[_this.id] == undefined)
-	// 				section_json[_this.id] = "no";
-	// 		});
+			//checkbox helper
+			var checkbox_array = $(_pb).find("input[type=checkbox]");
+			$.each(checkbox_array, function(i, _this){
+				if(section_json[_this.id] == undefined)
+					section_json[_this.id] = "no";
+			});
 
-	// 		//colorbox helper
-	// 		var color_array = $(_pb).find("input.anthrohack-color-picker");
-	// 		$.each(color_array, function(i, _this){
-	// 			// console.log(typeof $(_this).val());
-	// 			if(typeof $(_this).val() == "string"){
-	// 				var cleaned_content = $(_this).val().replace(/'/g, "").replace(/"/g, "").trim();
-	// 				section_json[$(_this).attr("id")] = cleaned_content;
-	// 			}
-	// 		});
+			//colorbox helper
+			var color_array = $(_pb).find("input.anthrohack-color-picker");
+			$.each(color_array, function(i, _this){
+				// console.log(typeof $(_this).val());
+				if(typeof $(_this).val() == "string"){
+					var cleaned_content = $(_this).val().replace(/'/g, "").replace(/"/g, "").trim();
+					section_json[$(_this).attr("id")] = cleaned_content;
+				}
+			});
 
-	// 		//open/closed helper
-	// 		if($(_pb).is(".closed")){
-	// 			section_json["section_closed"] = "closed";
-	// 		}else{
-	// 			section_json["section_closed"] = "open";
-	// 		}
+			//open/closed helper
+			if($(_pb).is(".closed")){
+				section_json["section_closed"] = "closed";
+			}else{
+				section_json["section_closed"] = "open";
+			}
 
-	// 		//tinymce editor helper
-	// 		var editor_array = $(_pb).find(".anthrohack_metabox_option.editor");
-	// 		$.each(editor_array, function(i, _this){
-	// 			var ed_id = $(_this).find("textarea").attr("id");
-	// 			if(tinymce.get(ed_id) != undefined){
-	// 				var esc_content = Base64.encode(tinymce.get(ed_id).getContent());
-	// 				section_json[ed_id] = esc_content;
-	// 			}
-	// 		});
-	// 		section_json['section_title'] = $(_pb).find(".hndle.title .text").text();
+			//tinymce editor helper
+			var editor_array = $(_pb).find(".anthrohack_metabox_option.editor");
+			$.each(editor_array, function(i, _this){
+				var ed_id = $(_this).find("textarea").attr("id");
+				if(tinymce.get(ed_id) != undefined){
+					var esc_content = Base64.encode(tinymce.get(ed_id).getContent());
+					section_json[ed_id] = esc_content;
+				}
+			});
+			section_json['section_title'] = $(_pb).find(".hndle.title .text").text();
 
-	// 		json_all.push(section_json);
-	// 	});
-	// 	// console.log(json_all);
+			json_all.push(section_json);
+		});
+		// console.log(json_all);
 
-	// 	// update hidden field with stringified array
-	// 	$("input" + section_id).val(JSON.stringify(json_all));
+		var resulting_JSON_string = JSON.stringify(json_all);
+		console.log(resulting_JSON_string);
+
+		//validate json by attempting to parse it
+		try {
+		 	var c = $.parseJSON(resulting_JSON_string);
+
+		 	console.log(input_id);
+		 	// update hidden field with stringified array
+		 	$(input_id).val(resulting_JSON_string);
+		}catch (err) {
+		  consolr.log(err);
+		}
+		
 	} //end update section json
 
 	function check_slug_against_exising_sections(slug, _parent){
