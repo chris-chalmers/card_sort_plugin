@@ -57,8 +57,8 @@ endif;
 /**
  * Add the scripts and styles we'll need to admin...
  */
-if ( ! function_exists( 'we_enqueue_admin' ) ) :
-	function we_enqueue_admin( $hook_suffix ) {
+if ( ! function_exists( 'anthrohack_enqueue_admin' ) ) :
+	function anthrohack_enqueue_admin( $hook_suffix ) {
 
 	    wp_enqueue_media();
 		wp_enqueue_script('media-upload');
@@ -67,7 +67,7 @@ if ( ! function_exists( 'we_enqueue_admin' ) ) :
 		wp_enqueue_script( 'wp-color-picker');
 		wp_enqueue_script('image_upload', plugins_url( '/includes/js/anthrohack_image_upload.js' , __FILE__ ), array( 'jquery' ), false, true );
 		wp_enqueue_script('validate_js', 'https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js', array('jquery'));
-        wp_enqueue_script('bootstrap_slider_js', plugins_url( '/includes/js/bootstrap-slider.min.js' , __FILE__ ), array( 'jquery' ), false, true );
+        // wp_enqueue_script('bootstrap_slider_js', plugins_url( '/includes/js/bootstrap-slider.min.js' , __FILE__ ), array( 'jquery' ), false, true );
         wp_enqueue_script( 'wp_tinymce_js', plugins_url( '/includes/js/tinymce/wordpress-tinymce.js' , __FILE__ ) , array( 'jquery' ), false, true );
 		wp_enqueue_script('admin_js', plugins_url( '/includes/js/anthrohack_admin.js' , __FILE__ ), array( 'jquery', 'wp-color-picker', 'wp_tinymce_js', 'media-editor' ) );
         wp_localize_script('admin_js', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
@@ -79,7 +79,7 @@ if ( ! function_exists( 'we_enqueue_admin' ) ) :
 		wp_enqueue_style('admin_css', plugins_url('/includes/css/anthrohack_admin.css', __FILE__ ));
 	
 	}
-	add_action( 'admin_enqueue_scripts', 'we_enqueue_admin' );
+	add_action( 'admin_enqueue_scripts', 'anthrohack_enqueue_admin' );
 
 endif;
 

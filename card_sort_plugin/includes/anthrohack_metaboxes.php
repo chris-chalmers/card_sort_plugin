@@ -116,7 +116,7 @@ function anthrohack_study_questions_callback ( $post )  {
     $anthrohack_questions = anthrohack_check_meta_var($anthrohack_stored_meta, "anthrohack_questions");
     ?>
 
-    <div class="questions-wrap">
+    <div class="questions section-wrap">
         <?php buttons(false, "question"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_questions" id="anthrohack_questions" value='<?php echo $anthrohack_questions; ?>' >
         <div id="anthrohack_questions_fields" class="layout-sections meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
@@ -202,7 +202,7 @@ function anthrohack_study_cards_callback ( $post )  {
     $anthrohack_cards = anthrohack_check_meta_var($anthrohack_stored_meta, "anthrohack_cards");
     ?>
 
-    <div class="cards-wrap">
+    <div class="cards section-wrap">
         <?php buttons(false, "card"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_cards" id="anthrohack_cards" value='<?php echo $anthrohack_cards; ?>' >
         <div id="anthrohack_cards_fields" class="meta-box-sortables ui-sortable layout-sections" data-id="<?php echo $post->ID; ?>">
