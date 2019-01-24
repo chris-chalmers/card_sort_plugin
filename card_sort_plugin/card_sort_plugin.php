@@ -40,12 +40,13 @@ if ( ! function_exists( 'anthrohack_enqueue_and_register_my_scripts' ) ) :
 	function anthrohack_enqueue_and_register_my_scripts(){
 
         //muuri drag and drop grid
-        wp_enqueue_script( 'hammer_js', plugins_url( '/includes/js/hammer.min.js' , __FILE__ ), array(), false, true );
-        wp_enqueue_script( 'web_animations_polyfil', plugins_url( '/includes/js/web-animations.min.js' , __FILE__ ), array(), false, true );
-        wp_enqueue_script( 'muuri_js', plugins_url( '/includes/js/muuri.min.js' , __FILE__ ), array( 'hammer_js', 'web_animations_polyfil' ), false, true );
+        wp_enqueue_script( 'hammer_js', 'https://unpkg.com/hammerjs@2.0.8/hammer.min.js', array(), false, true );
+        wp_enqueue_script( 'web_animations_polyfil', 'https://unpkg.com/web-animations-js@2.3.1/web-animations.min.js', array(), false, true );
+        wp_enqueue_script( 'muuri_js', 'https://unpkg.com/muuri@0.7.1/dist/muuri.min.js', array( 'hammer_js', 'web_animations_polyfil' ), false, true );
+        wp_enqueue_script( 'draggable_js', plugins_url( '/includes/js/anthrohack_draggable.js' , __FILE__ ), array( 'muuri_js' ), false, true );
 
 	    //common scripts for ff plugin
-	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery','muuri_jss' ), false, true );
+	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery' ), false, true );
 
 	    //styles
 	    wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
@@ -68,7 +69,7 @@ if ( ! function_exists( 'anthrohack_enqueue_admin' ) ) :
         wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
         wp_enqueue_style('bootstrap_slider_css', plugins_url('/includes/css/bootstrap-slider.min.css', __FILE__ ));
         wp_enqueue_style('admin_css', plugins_url('/includes/css/anthrohack_admin.css', __FILE__ ));
-            
+
 		// wp_enqueue_script('suggest');
 		wp_enqueue_script( 'wp-color-picker');
 		wp_enqueue_script('image_upload', plugins_url( '/includes/js/anthrohack_image_upload.js' , __FILE__ ), array( 'jquery' ), false, true );

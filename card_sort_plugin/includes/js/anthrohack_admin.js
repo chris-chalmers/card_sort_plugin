@@ -5,9 +5,11 @@
 
 		handle_draggable_sections('questions');
 		handle_draggable_sections('cards');
+		handle_draggable_sections('piles');
 		handle_color_picker();
-		handle_sliders();
 		handle_checkboxes();
+		handle_sliders();
+		piles_visible();
 		
 	}); //end doc ready
 
@@ -26,17 +28,48 @@
 		}, interval );
 	}
 
+	//update the hidden field of checkboxes (this is done for easier form submitting)
 	function handle_checkboxes(){
-		$.each($(".anthrohack_checkbox"), function(i, _this){
-			var id = "#" + $(_this).attr("id") + "_hidden";
-			$(_this).change(function(){
-				if($(_this).prop("checked")){
-					$(id).val("on");
+		$.each($(".anthrohack_checkbox"), function(i, _box){
+			var id = "#" + $(_box).attr("id") + "_hidden";
+			$(_box).change(function(){
+				if($(_box).prop("checked")){
+					$(id).val("on").trigger('change');
 				}else{
-					$(id).val("off");
+					$(id).val("off").trigger('change');
 				}
 			});
 		});
+	}
+
+	function piles_visible(){
+		var $constrained_checkbox = $("#constrained_hidden");
+		if($constrained_checkbox.length > 0){
+
+			//do it once
+			show_hide($constrained_checkbox, "#anthrohack_study_piles");
+
+			//bind to do it again
+			$($constrained_checkbox).change(function(){
+				console.log("change!");
+				show_hide($constrained_checkbox, "#anthrohack_study_piles");
+			});
+
+			function show_hide($test ,selector){
+
+				// console.log($test.val() == "on");
+				console.log(selector);
+
+				if( $test.val() == "on" || $test.val() == "yes"){
+					console.log("showing piles");
+					$(selector).removeClass("anthrohack-hidden");
+				}else{
+					console.log("hiding piles");
+					$(selector).addClass("anthrohack-hidden");
+				}
+			}
+
+		}
 	}
 
 	function strip_whitespace(str){
@@ -116,114 +149,133 @@
 			bind_page_section(_this, section);
 		 });
 
+		//check that ID#s are set
+		 $.each($(fields_id).find(".layout-section"), function(i,_this){
+		 	if($(_this).data("id") == undefined || $(_this).data("id") == "none"){
+				//calculate new template id
+				var count = calculate_section_id(fields_id);
+				$(_this).data("id", count.toString());
+				$(_this).find(".section-id .number").html(count.toString());
+				console.log("updated " + $(_this).attr("id") + " with ID# " + count.toString());
+			}
+		 });
+
 		 // button to create new layout sections
 		 $.each($(section_id).find("a.add-section.button"), function(i,_this){
 			$(_this).click(function(){
 
 				var title = prompt("choose a title");
-				var slug = title.replace(/\s+/g, '_').replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^`{|}~']/g,"").toLowerCase();
-				if (slug === null || slug.trim() == "") {
-					return; //break out of the function early
-				}else{
-					// console.log(check_slug_against_exising_sections(slug, fields_id));
-					if(check_slug_against_exising_sections(slug, fields_id) == true){
-						alert("That title is already in use");
+				if(title != null){
+					var slug = title.replace(/\s+/g, '_').replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^`{|}~']/g,"").toLowerCase();
+					if (slug === null || slug.trim() == "") {
 						return; //break out of the function early
-					}
-
-					var target = $(fields_id);
-					var post_id = $(target).data("id");
-					var order = (i == 0)? "0" : $(target).find(".postbox").length; //order at the beginning or end depending on button loc
-					$(target).find(".note").remove();
-					$(section_id).find(".buttons").removeClass("hidden");
-
-					var old_template = $(template_id);
-
-					//disable template's tinymce editors (so can be copied)
-					$.each($(old_template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
-						var ed_id = String($(_editor).find("textarea").attr("id"));
-						tinymce.EditorManager.execCommand('mceRemoveEditor',true, ed_id);
-					});
-
-					//add new section from template
-					var template = old_template.clone(true, true);
-
-					// console.log(template);
-
-					if(i == 0){
-						$(target).prepend(template);
 					}else{
-						$(target).append(template);
-					}
-					
-					//prepend section name to template fields (anti-ambiguety)
-					$(template).attr("id", slug);
-					$(template).find("input#section_order").val(order);
-					$(template).find(".hndle.title .text").html(title);
-					$(template).find("input#section_title").val(title);
-					$(template).find("input#section_slug").val(slug);
-					$(template).find(".section-slug .slug").html(slug);
+						// console.log(check_slug_against_exising_sections(slug, fields_id));
+						if(check_slug_against_exising_sections(slug, fields_id) == true){
+							alert("That title is already in use");
+							return; //break out of the function early
+						}
 
-					//update all field names to new section name
-					$.each($(template).find("input, select, textarea"), function(i, _element){
+						var target = $(fields_id);
+						var post_id = $(target).data("id");
+						var order = (i == 0)? "0" : $(target).find(".postbox").length; //order at the beginning or end depending on button loc
+						$(target).find(".note").remove();
+						$(section_id).find(".buttons").removeClass("hidden");
+
+						var old_template = $(template_id);
+
+						//disable template's tinymce editors (so can be copied)
+						$.each($(old_template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
+							var ed_id = String($(_editor).find("textarea").attr("id"));
+							tinymce.EditorManager.execCommand('mceRemoveEditor',true, ed_id);
+						});
+
+						//add new section from template
+						var template = old_template.clone(true, true);
+
+						// console.log(template);
+
+						if(i == 0){
+							$(target).prepend(template);
+						}else{
+							$(target).append(template);
+						}
 						
-						var oldname = $(_element).attr("name");
-						if(oldname != undefined)
-							$(_element).attr("name", oldname.replace("template", slug));
-						var oldname = $(_element).attr("id");
-						if(oldname != undefined)
-							$(_element).attr("id", oldname.replace("template", slug));
-					});
+						//prepend section name to template fields (anti-ambiguety)
+						$(template).attr("id", slug);
+						$(template).find("input#section_order").val(order);
+						$(template).find(".hndle.title .text").html(title);
+						$(template).find("input#section_title").val(title);
+						$(template).find("input#section_slug").val(slug);
+						$(template).find(".section-slug .slug").html(slug);
 
-					//destroy and re-build template sliders 
-					$.each($(template).find(".anthrohack_metabox_option.slider"), function(i, _this){
-						
-						var name = $(_this).find("input[type=text]").attr("name");
-						var title = $(_this).find("label").text().trim();
-						var desc = $(_this).find("span.option-description").text().trim();
-						var value = $(_this).find("input[type=text]").val();
-						var min = $(_this).find("input[type=text]").data("min");
-						var max = $(_this).find("input[type=text]").data("max");
+						//calculate new template id
+						var count = calculate_section_id(fields_id);
+						$(template).data("id", count.toString());
+						$(template).find(".section-id .number").html(count.toString());
+						console.log("updated " + $(template).attr("id") + " with ID# " + count.toString());
 
-						var new_slider = '<label for="'+name+'" class="title"><strong>'+title+'</strong></label>' 
-										+ '<span class="option-description">'+desc+'</span>'
-										+ '<input type="text" name="'+name+'" id="'+name+'" value="'+value+'" />';
+						//update all field names to new section name
+						$.each($(template).find("input, select, textarea"), function(i, _element){
+							
+							var oldname = $(_element).attr("name");
+							if(oldname != undefined)
+								$(_element).attr("name", oldname.replace("template", slug));
+							var oldname = $(_element).attr("id");
+							if(oldname != undefined)
+								$(_element).attr("id", oldname.replace("template", slug));
+						});
 
-						$(_this).html(new_slider);
-						$(_this).find("input[type=text]").bootstrapSlider({
-							"min": min,
-							"max":max,
-							"value": parseFloat(value)
+						//destroy and re-build template sliders 
+						$.each($(template).find(".anthrohack_metabox_option.slider"), function(i, _this){
+							
+							var name = $(_this).find("input[type=text]").attr("name");
+							var title = $(_this).find("label").text().trim();
+							var desc = $(_this).find("span.option-description").text().trim();
+							var value = $(_this).find("input[type=text]").val();
+							var min = $(_this).find("input[type=text]").data("min");
+							var max = $(_this).find("input[type=text]").data("max");
+
+							var new_slider = '<label for="'+name+'" class="title"><strong>'+title+'</strong></label>' 
+											+ '<span class="option-description">'+desc+'</span>'
+											+ '<input type="text" name="'+name+'" id="'+name+'" value="'+value+'" />';
+
+							$(_this).html(new_slider);
+							$(_this).find("input[type=text]").bootstrapSlider({
+								"min": min,
+								"max":max,
+								"value": parseFloat(value)
+							});
+							
 						});
 						
-					});
-					
-					//fix ids in media buttons in new editor
-					$.each($(template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
-						// $(_editor).find("#wp-template_section_content-media-buttons").remove();
-						//init new editors
-						var ed_id = String($(_editor).find("textarea").attr("id"));
-						tinymce.EditorManager.execCommand('mceAddEditor',true, ed_id);
-						quicktags({id : ed_id});
-					});
-					bind_page_section($(template), section);
+						//fix ids in media buttons in new editor
+						$.each($(template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
+							// $(_editor).find("#wp-template_section_content-media-buttons").remove();
+							//init new editors
+							var ed_id = String($(_editor).find("textarea").attr("id"));
+							tinymce.EditorManager.execCommand('mceAddEditor',true, ed_id);
+							quicktags({id : ed_id});
+						});
+						bind_page_section($(template), section);
 
-					//re-enable template's editors (so can be copied)
-					$.each($(old_template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
-						var ed_id = String($(_editor).find("textarea").attr("id"));
-						tinymce.EditorManager.execCommand('mceAddEditor',true, ed_id);
-					});
+						//re-enable template's editors (so can be copied)
+						$.each($(old_template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
+							var ed_id = String($(_editor).find("textarea").attr("id"));
+							tinymce.EditorManager.execCommand('mceAddEditor',true, ed_id);
+						});
 
-					//init colorpicker
-					$(template).find(".anthrohack-color-picker").wpColorPicker({
-						change : function(){
-							update_layout_section_json(section);
-						}
-					});
+						//init colorpicker
+						$(template).find(".anthrohack-color-picker").wpColorPicker({
+							change : function(){
+								update_layout_section_json(section);
+							}
+						});
 
-					//update json field with new section
-					// console.log("new section");
-					update_layout_section_json(section);
+						//update json field with new section
+						// console.log("new section");
+						update_layout_section_json(section);
+					}
 				}
 				
 			});
@@ -292,6 +344,13 @@
 			});
 		});
 
+		$.each($(_this).find(".anthrohack_checkbox"), function(i, _box){
+			var id = "#" + $(_box).attr("id") + "_hidden";
+			$(_box).change(function(){
+				update_layout_section_json(section);
+			});
+		});
+
 
 		$(_this).find("input, select, textarea").change(function(){
 			update_layout_section_json(section);
@@ -299,7 +358,7 @@
 
 		//init section's editors
 		setTimeout(function() {
-			$.each($(_this).find(".fws_metabox_option.editor"), function(i, _editor){
+			$.each($(_this).find(".anthrohack_metabox_option.editor"), function(i, _editor){
 					var ed_id = String($(_editor).find("textarea").attr("id"));
 					// console.log(ed_id);		
 					// console.log(tinymce.editors[ed_id]); 		
@@ -333,6 +392,9 @@
 
 	//update layoutsections json in hidden field
 	function update_layout_section_json(section){
+
+		// enable_disable_all_fields('off');
+
 		var json_all = [];
 		var section_id = "#anthrohack_study_" + section; 
 		var template_id = "#" + section + "_template"; 
@@ -345,7 +407,14 @@
 			//push serialized section fields to array of all sections
 			var section_serialized = $(_pb).find("select, textarea, input").serializeArray();
 			var section_json = serialized_to_json(section_serialized);
-			
+
+			//update title
+			section_json['section_title'] = $(_pb).find(".hndle.title .text").text();
+
+			//update id number
+			if($(_pb).data("id") != undefined)
+				section_json['section_id_number'] = $(_pb).data("id");	
+
 			//checkbox helper
 			var checkbox_array = $(_pb).find("input[type=checkbox]");
 			$.each(checkbox_array, function(i, _this){
@@ -379,7 +448,6 @@
 					section_json[ed_id] = esc_content;
 				}
 			});
-			section_json['section_title'] = $(_pb).find(".hndle.title .text").text();
 
 			json_all.push(section_json);
 		});
@@ -391,8 +459,10 @@
 		 	var c = $.parseJSON(resulting_JSON_string);
 		 	// update hidden field with stringified array
 		 	$(input_id).val(resulting_JSON_string);
+		 	// enable_disable_all_fields('on');
 		}catch (err) {
-		  consolr.log(err);
+		  console.log(err);
+		  // enable_disable_all_fields('on');
 		}
 		
 	} //end update section json
@@ -432,8 +502,13 @@
 		$(template).find("input#section_slug").val(slug);
 		$(template).find(".section-slug .slug").html(slug);
 
+		//calculate new template id
+		var count = calculate_section_id(fields_id);
+		console.log("added new " + section + " with ID: " + count);
+		$(template).data("id", count);
+
 		var ed_array = [];
-		$.each($(template).find(".fws_metabox_option.editor"), function(i, _editor){
+		$.each($(template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
 			var old_id = $(_editor).find("textarea").attr("id");
 			$(_editor).data("old_id", old_id);
 
@@ -454,7 +529,7 @@
 		});
 
 		//destroy and re-build template sliders 
-		$.each($(template).find(".fws_metabox_option.slider"), function(i, _this){
+		$.each($(template).find(".anthrohack_metabox_option.slider"), function(i, _this){
 			
 			var name = $(_this).find("input[type=text]").attr("name");
 			var title = $(_this).find("label").text().trim();
@@ -477,7 +552,7 @@
 		});
 		
 		//disable /re-enable template's tinymce editors 
-		$.each($(template).find(".fws_metabox_option.editor"), function(i, _editor){
+		$.each($(template).find(".anthrohack_metabox_option.editor"), function(i, _editor){
 			var old_id = $(_editor).data("old_id");
 			var old_editor = tinymce.get(old_id);
 			var ed_id = $(_editor).find("textarea").attr("id");
@@ -500,7 +575,7 @@
 		bind_page_section($(template), section);
 
 		//init colorpicker
-		$(template).find(".fws-color-picker").wpColorPicker({
+		$(template).find(".anthrohack-color-picker").wpColorPicker({
 			change : function(){
 				update_layout_section_json();
 			}
@@ -511,11 +586,44 @@
 		update_layout_section_json(section);
 	}//end duplicate
 
-	function disable_all_fields(_this, state){
+	function enable_disable_all_fields(state){
 		if(state === "on"){
-			$(_this).find("input, select, textarea").prop( "disabled", false ); //Enable
+			//select all fields with disabled_temp prop
+			var $fields = ("input[disabled_temp], select[disabled_temp], textarea[disabled_temp]");
+			if($fields.length > 0){
+				$.each($fields, function(i, _field){
+					$(_field).removeProp( "disabled_temp").removeProp( "disabled"); //Enable
+				});
+			}
+
 		}else{
-			$(_this).find("input, select, textarea").prop( "disabled", true ); //Disable
+			//select all fields that aren't already disabled
+			var $fields = $("input, select, textarea").not("[disabled]");
+			if($fields.length > 0){
+				$.each($fields, function(i, _field){
+					$(_field).prop( "disabled", true ).prop("disabled_temp"); //Disable
+				});
+			}
+			
+		}
+	}
+
+	function calculate_section_id(fields_id){
+		if($(fields_id).length > 0){
+			var count = 1;
+			$.each($(fields_id).find(".layout-section"), function(i, _section){
+				var section_id =$(_section).data("id");
+				// console.log(section_id);
+				if(section_id != null && section_id != "none"){
+
+					if(parseInt(section_id) >= count){
+						count = parseInt(section_id) + 1;
+					}
+				}
+			});
+			return count;
+		}else{
+			return false;
 		}
 	}
 

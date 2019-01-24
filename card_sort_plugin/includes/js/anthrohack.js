@@ -1,17 +1,18 @@
 
 //load jQuery if not loaded already :)
-if(!window.jQuery){
-   var script = document.createElement('script');
-   script.type = "text/javascript";
-   script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
-   document.getElementsByTagName('head')[0].appendChild(script);
-}
+// if(!window.jQuery){
+//    var script = document.createElement('script');
+//    script.type = "text/javascript";
+//    script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
+//    document.getElementsByTagName('head')[0].appendChild(script);
+// }
 
 (function($){
 
 	$(document).ready(function(){
+		console.log("ready");
+
 		handle_accordions();
-		
 		
 	}); //end doc ready
 
@@ -63,7 +64,5 @@ if(!window.jQuery){
 	  var doc = new DOMParser().parseFromString(input, "text/html");
 	  return doc.documentElement.textContent;
 	}
-
-	
 
 })(jQuery)

@@ -29,6 +29,14 @@ function anthrohack_meta_boxes() {
     );
 
     add_meta_box(  
+        'anthrohack_study_piles',
+        'Study piles',
+        'anthrohack_study_piles_callback',
+        'study',
+        'top'
+    );
+
+    add_meta_box(  
         'anthrohack_study_cards',
         'Study Cards',
         'anthrohack_study_cards_callback',
@@ -71,6 +79,18 @@ function anthrohack_study_options_callback ( $post )  {
                 "type" => "text",
                 "description" => "Minimum number of cards that sorter is allowed to put in each pile.",
                 "default_content" => ""
+            ),
+            array(
+                "name" => "card_text_alignment",
+                "title" => __( "Default text alignment for cards", '_anthrohack_' ),
+                "type" => "select",
+                'select_options' => array(
+                    'center' => "center",
+                    'left' => 'left',
+                    'right' => "right",
+                ),
+                "description" => "Alignment for title and description on cards.",
+                "default_content" => "center"
             ),
             array(
                 "name" => "cards_instructions",
@@ -151,6 +171,7 @@ function anthrohack_study_questions_callback ( $post )  {
 
 <?php }//end draggable callback
 
+//Questions fields
 function anthrohack_question_meta_template($question = Null){ 
     $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
@@ -159,31 +180,33 @@ function anthrohack_question_meta_template($question = Null){
             "name" => "required",
             "title" => __( 'Required?', '_anthrohack_' ),
             "type" => "checkbox",
-            "description" => "Check if this question is required. If checked, sorter willnot be allowed to submit finished sort without answering.",
+            "description" => "Check if this question is required. If checked, sorter will not be allowed to submit a finished sort without answering.",
             "default_content" => "",
             "class" => ''
         ),
-         array(
-            "name" => "question_content",
-            "title" => __( 'Column One Content', '_anthrohack_' ),
+        array(
+            "name" => "hero_image",
+            "title" => __( 'Question Background image', '_anthrohack_' ),
+            "type" => "image",
+            "description" => "<sup>+</sup>Optional. The image will appear alongside the question text.",
+            "default_content" => "",
+            "class" => ''
+        ), 
+        array(
+            "name" => "content",
+            "title" => __( 'Question text', '_anthrohack_' ),
             "type" => "editor",
             "default_content" => "",
             "class" => ""
         ),
-         array(
-            "name" => "hero_image",
-            "title" => __( 'Background image', '_anthrohack_' ),
-            "type" => "image",
-            "description" => "This image will be used as a full-bleed background. It will appear behind the main color if transparency is set.",
-            "default_content" => "",
-            "class" => ''
-        ),
+         
     );
      
     if($question == Null){
         $question = array(
             "section_title" => "questions_template",
-            "section_slug" => "questions_template"
+            "section_slug" => "questions_template",
+            "section_type" => "question",
         );
     }
      
@@ -192,34 +215,84 @@ function anthrohack_question_meta_template($question = Null){
 //end Questions
 
 /**
+* piles!
+* Draggable sections for piles 
+**/
+function anthrohack_study_piles_callback ( $post )  {
+    wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
+    $anthrohack_stored_meta = get_post_meta( $post->ID ); 
+    $post_slug = $post->post_name; 
+    $anthrohack_piles = anthrohack_check_meta_var($anthrohack_stored_meta, "anthrohack_piles"); ?>
+
+    <div class="piles section-wrap">
+        <?php buttons(false, "pile"); ?>
+        <input type="hidden" class="hidden-input" name="anthrohack_piles" id="anthrohack_piles" value='<?php echo $anthrohack_piles; ?>' >
+        <div id="anthrohack_piles_fields" class="meta-box-sortables ui-sortable layout-sections" data-id="<?php echo $post->ID; ?>">
+
+                <?php $anthrohack_piles_object = json_decode($anthrohack_piles);
+                //NOTE both anthrohack_check_meta_var and json_decode return false if no piles are present or string is not JSON serializabel.
+                if($anthrohack_piles && $anthrohack_piles_object){
+                    foreach ($anthrohack_piles_object as  $pile) { 
+                        anthrohack_pile_meta_template(get_object_vars($pile));
+                    } //end foreach ?>
+                    </div><!-- .meta-box-sortables.ui-sortable-->
+                        <?php buttons(false, "pile"); 
+                }else{ ?>
+                        <div class="note">No piles yet. click button to add one!</div>
+                    </div><!-- .meta-box-sortables.ui-sortable-->
+                    <?php buttons("hidden", "pile");
+                 } ?>
+    </div><!-- .wrap -->
+    <div id="anthrohack_pile_template" class="hidden">
+        <?php echo anthrohack_pile_meta_template(); //this is written as a function because it's re-used ?>
+    </div>
+
+<?php }//end draggable callback
+
+function anthrohack_pile_meta_template($pile = Null){ 
+    $anthrohack_settings = get_option( 'anthrohack_settings' );  
+
+    $anthrohack_piles_fields = array(
+         array(
+            "name" => "content",
+            "title" => __( 'Description', '_anthrohack_' ),
+            "type" => "editor",
+            "default_content" => "",
+            "class" => ""
+        ),
+
+    );
+
+    if($pile == Null){
+        $pile = array(
+            "section_title" => "piles_template",
+            "section_slug" => "piles_template",
+            "section_type" => "pile",
+        );
+    }
+     
+    anthrohack_render_section($anthrohack_piles_fields, $pile);
+}
+//end Piles
+
+/**
 * Cards!
-* Draggable cards for cards 
+* Draggable sections for cards 
 **/
 function anthrohack_study_cards_callback ( $post )  {
     wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
     $anthrohack_stored_meta = get_post_meta( $post->ID ); 
     $post_slug = $post->post_name; 
-    $anthrohack_cards = anthrohack_check_meta_var($anthrohack_stored_meta, "anthrohack_cards");
-    ?>
+    $anthrohack_cards = anthrohack_check_meta_var($anthrohack_stored_meta, "anthrohack_cards"); ?>
 
     <div class="cards section-wrap">
         <?php buttons(false, "card"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_cards" id="anthrohack_cards" value='<?php echo $anthrohack_cards; ?>' >
         <div id="anthrohack_cards_fields" class="meta-box-sortables ui-sortable layout-sections" data-id="<?php echo $post->ID; ?>">
 
-                <?php 
-                
-                $anthrohack_cards_object = json_decode($anthrohack_cards);
-
-                //both anthrohack_check_meta_var and json_decode return false if no cards are present or string is not JSON serializabel.
+                <?php $anthrohack_cards_object = json_decode($anthrohack_cards);
+                //NOTE both anthrohack_check_meta_var and json_decode return false if no cards are present or string is not JSON serializabel.
                 if($anthrohack_cards && $anthrohack_cards_object){
-
-                    //sort Cards by order
-                    // function cmp($a, $b){
-                    //     return strcmp($a->card_order, $b->card_order);
-                    // }
-                    // usort($anthrohack_cards, "cmp");
-
                     foreach ($anthrohack_cards_object as  $card) { 
                         anthrohack_card_meta_template(get_object_vars($card));
                     } //end foreach ?>
@@ -255,15 +328,7 @@ function anthrohack_card_meta_template($card = Null){
             "class" => ''
         ),
         array(
-            "name" => "center_vertically",
-            "title" => __( 'Center content vertically?', '_anthrohack_' ),
-            "type" => "checkbox",
-            "description" => 'select this to center all content vertically.',
-            "default_content" => "off",
-            "class" => ''
-        ),
-        array(
-            "name" => "card_padding",
+            "name" => "padding",
             "title" => __( 'card Padding', '_anthrohack_' ),
             "type" => "select",
             "select_options" => array(
@@ -333,8 +398,9 @@ function anthrohack_card_meta_template($card = Null){
             "class" => ''
         ),
          array(
-            "name" => "card_content",
-            "title" => __( 'Column One Content', '_anthrohack_' ),
+            "name" => "content",
+            "title" => __( 'Description', '_anthrohack_' ),
+            "description" => "<sup>*</sup>Optional - include a short description to be displayed in the card body. Text will be truncated to 200 characters.",
             "type" => "editor",
             "default_content" => "",
             "class" => ""
@@ -345,7 +411,8 @@ function anthrohack_card_meta_template($card = Null){
     if($card == Null){
         $card = array(
             "section_title" => "cards_template",
-            "section_slug" => "cards_template"
+            "section_slug" => "cards_template",
+            "section_type" => "card"
         );
     }
      
@@ -353,10 +420,12 @@ function anthrohack_card_meta_template($card = Null){
 }
 //end Cards
 
-//general function for rendering sections (used by sections and sections)
+//general function for rendering sections (used by cards, piles and questions)
 function anthrohack_render_section($fields, $section){
 
+    $type = anthrohack_check_meta_var($section, "section_type", "");
     $title = anthrohack_check_meta_var($section, "section_title", "");
+    $id_number = anthrohack_check_meta_var($section, "section_id_number", "none");
     $slug = anthrohack_check_meta_var($section, "section_slug", strtolower(str_replace(' ', '_', $title)), "");
     $order = anthrohack_check_meta_var($section, "section_order", "");
     $disabled = anthrohack_check_meta_var($section, "section_disabled", "");
@@ -379,7 +448,7 @@ function anthrohack_render_section($fields, $section){
 
 
     // $section is an object containing all the params for that section ?>
-    <div id="<?php echo str_replace(' ', '_', strtolower($title)); ?>" class="postbox layout-section <?php echo $color_class; ?> <?php echo $closed; ?> <?php echo $disabled; ?>">
+    <div id="<?php echo str_replace(' ', '_', strtolower($title)); ?>" data-id="<?php echo $id_number; ?>" class="postbox layout-section <?php echo $color_class; ?> <?php echo $closed; ?> <?php echo $disabled; ?>">
         <button class="handlediv toggle" aria-expanded="true"><span class="screen-reader-text">Toggle section</span><span class="toggle-indicator" aria-hidden="true"></span></button>
         <!-- <div class="postbox-button disable" alt="Disable"><span class="screen-reader-text">Disable section</span><i class="fa fa-eye-slash" aria-hidden="true"></i><i class="fa fa-eye" aria-hidden="true"></i></i></div> -->
         <div class="postbox-button delete" alt="Delete"><span class="screen-reader-text">Delete section</span><i class="fa fa-trash" aria-hidden="true"></i></div>
@@ -396,7 +465,8 @@ function anthrohack_render_section($fields, $section){
         <input type="hidden" class="hidden-input" name="section_closed" id="section_closed" value="<?php echo $closed;?>" >
 
             <div class="container">
-                    <div class="section-slug">section slug = <span class="slug"><?php echo $slug; ?></slug></div> 
+                    <div class="section-slug"><?php echo $type; ?> slug = <span class="slug"><?php echo $slug; ?></slug></div> 
+                    <div class="section-id"><?php echo $type; ?> ID# = <span class="number"><?php echo $id_number; ?></slug></div> 
                     <?php //render section settings
                     
                     foreach ($fields as $revision_field_array) {
@@ -617,6 +687,7 @@ function anthrohack_meta_save( $post_id ) {
         "anthrohack_questions",
         "anthrohack_cards",
         "anthrohack_piles",
+        "card_text_alignment"
     );
 
     foreach($revision_field_array as $field){
