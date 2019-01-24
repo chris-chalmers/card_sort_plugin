@@ -46,8 +46,8 @@ function anthrohack_settings_init(  ) {
 //sets the options page item in the admin menu
 function anthrohack_add_admin_menu(  ) { 
 	$theme_name = get_bloginfo( 'name' );
-	$saved_settings = get_option( 'anthrohack_settings' );
-	$icon_url = (isset ($saved_settings["anthrohack_favicvon"]))? $saved_settings["anthrohack_favicvon"] : "dashicons-admin-generic";	
+	$anthrohack_settings = get_option( 'anthrohack_settings' );
+	$icon_url = (isset ($anthrohack_settings["anthrohack_favicvon"]))? $anthrohack_settings["anthrohack_favicvon"] : "dashicons-admin-generic";	
 	$theme_name = get_bloginfo( 'name' );
 	add_menu_page( 
         $theme_name . ' Options',
@@ -69,9 +69,9 @@ class anthrohack_Settings_Renderer{
 
 	public function render($option_array, $section_slug){
 		//set up variables we'll pass to the callback
-		$saved_settings = get_option( 'anthrohack_settings' );  
+		$anthrohack_settings = get_option( 'anthrohack_settings' );  
 		$id = $option_array->name;
-		$content = ($saved_settings && array_key_exists( $id, $saved_settings ))? $saved_settings[$id] : $option_array->default_content;	
+		$content = ($anthrohack_settings && array_key_exists( $id, $anthrohack_settings ))? $anthrohack_settings[$id] : $option_array->default_content;	
 		$args     = array (
             'id'	  => $id,
             'options' => $option_array,

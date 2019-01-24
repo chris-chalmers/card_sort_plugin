@@ -41,12 +41,12 @@ add_action( 'add_meta_boxes', 'anthrohack_meta_boxes' );
 
 function anthrohack_study_options_callback ( $post )  {
     wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
-    $saved_settings = get_option( 'anthrohack_settings' );  
+    $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
         $anthrohack_field_array = array(
             array(
                 "name" => "description",
-                "title" => __( "Research porotocol", '_anthrohack_' ),
+                "title" => __( "Research protocol", '_anthrohack_' ),
                 "type" => "editor",
                 "description" => "Description of the study, goals and methodology.",
                 "default_content" => ""
@@ -73,6 +73,13 @@ function anthrohack_study_options_callback ( $post )  {
                 "default_content" => ""
             ),
             array(
+                "name" => "cards_instructions",
+                "title" => __( "Cards instructions", '_anthrohack_' ),
+                "type" => "textarea",
+                "description" => "Short description do go in the cards window",
+                "default_content" => "Drag each card onto a pile."
+            ),
+            array(
                 "name" => "email",
                 "title" => __( "Researcher notification email", '_anthrohack_' ),
                 "type" => "textarea",
@@ -81,7 +88,8 @@ function anthrohack_study_options_callback ( $post )  {
             ),
         ); //end field_array
   
-    
+    echo "Shortcode = [card_sort_study id=" . $post->ID . "]";
+
     foreach ($anthrohack_field_array as $field_array) {
         echo anthrohack_render_meta_field($field_array);
     }
@@ -101,7 +109,7 @@ function anthrohack_study_questions_callback ( $post )  {
     ?>
 
     <div class="questions-wrap">
-        <?php buttons(); ?>
+        <?php buttons(false, "question"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_questions" id="anthrohack_questions" value='<?php echo $anthrohack_questions; ?>' >
         <div id="anthrohack_questions_fields" class="meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
 
@@ -122,11 +130,11 @@ function anthrohack_study_questions_callback ( $post )  {
                         anthrohack_question_meta_template(get_object_vars($question));
                     } //end foreach ?>
                     </div><!-- .meta-box-sortables.ui-sortable-->
-                        <?php buttons(); 
+                        <?php buttons(false, "question"); 
                 }else{ ?>
                         <div class="note">No questions yet. click button to add one!</div>
                     </div><!-- .meta-box-sortables.ui-sortable-->
-                    <?php buttons("hidden");
+                    <?php buttons("hidden", "question");
                  } ?>
     </div><!-- .wrap -->
     <div id="anthrohack_question_template" class="hidden">
@@ -136,7 +144,7 @@ function anthrohack_study_questions_callback ( $post )  {
 <?php }//end draggable callback
 
 function anthrohack_question_meta_template($question = Null){ 
-    $saved_settings = get_option( 'anthrohack_settings' );  
+    $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
     $anthrohack_questions_fields = array(
         array(
@@ -238,7 +246,7 @@ function anthrohack_study_cards_callback ( $post )  {
     ?>
 
     <div class="cards-wrap">
-        <?php buttons(); ?>
+        <?php buttons(false, "card"); ?>
         <input type="hidden" class="hidden-input" name="anthrohack_cards" id="anthrohack_cards" value='<?php echo $anthrohack_cards; ?>' >
         <div id="anthrohack_cards_fields" class="meta-box-sortables ui-sortable" data-id="<?php echo $post->ID; ?>">
 
@@ -259,11 +267,11 @@ function anthrohack_study_cards_callback ( $post )  {
                         anthrohack_card_meta_template(get_object_vars($card));
                     } //end foreach ?>
                     </div><!-- .meta-box-sortables.ui-sortable-->
-                        <?php buttons(); 
+                        <?php buttons(false, "card"); 
                 }else{ ?>
                         <div class="note">No Cards yet. click button to add one!</div>
                     </div><!-- .meta-box-sortables.ui-sortable-->
-                    <?php buttons("hidden");
+                    <?php buttons("hidden", "card");
                  } ?>
     </div><!-- .wrap -->
     <div id="anthrohack_card_template" class="hidden">
@@ -273,7 +281,7 @@ function anthrohack_study_cards_callback ( $post )  {
 <?php }//end draggable callback
 
 function anthrohack_card_meta_template($card = Null){ 
-    $saved_settings = get_option( 'anthrohack_settings' );  
+    $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
     $anthrohack_cards_fields = array(
         array(
@@ -347,7 +355,7 @@ function anthrohack_card_meta_template($card = Null){
             "title" => __( 'card background color', '_anthrohack_' ),
             "type" => "color_selector",
             "description" => "Optional - Choose a secondary overlay color to create a gradient. If selected, gradient will appear over background image.",
-            "default_content" => anthrohack_check_meta_var($saved_settings, "page_bg_color2", ""),
+            "default_content" => anthrohack_check_meta_var($anthrohack_settings, "page_bg_color2", ""),
             "class" => ''
         ),
         array(
@@ -439,14 +447,7 @@ function anthrohack_card_meta_template($card = Null){
 <?php }
 //end Cards
 
-
-function buttons($hidden = false){ 
-    if(!$hidden) $hidden = "";
-    ?>
-    <div class="buttons <?php echo $hidden; ?>" >
-        <a type="button" class="add-section button"><i class="fa fa-plus" aria-hidden="true"></i> Add section</a>
-    </div>
-<?php }
+//NOTE buttons() function is found in main plugin file (card_sort_plugin.php)
 
 function anthrohack_render_meta_field( $atts , $anthrohack_stored_meta = False) {
 
@@ -649,7 +650,8 @@ function anthrohack_meta_save( $post_id ) {
         "constrained",
         "min_piles",
         "min_cards",
-        "email"
+        "email",
+        "cards_instructions",
     );
 
     foreach($revision_field_array as $field){

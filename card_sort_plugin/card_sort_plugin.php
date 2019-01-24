@@ -38,11 +38,17 @@ include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
 **/
 if ( ! function_exists( 'anthrohack_enqueue_and_register_my_scripts' ) ) :
 	function anthrohack_enqueue_and_register_my_scripts(){
-		
+
+        //muuri drag and drop grid
+        wp_enqueue_script( 'hammer_js', plugins_url( '/includes/js/hammer.min.js' , __FILE__ ), array(), false, true );
+        wp_enqueue_script( 'web_animations_polyfil', plugins_url( '/includes/js/web-animations.min.js' , __FILE__ ), array(), false, true );
+        wp_enqueue_script( 'muuri_js', plugins_url( '/includes/js/muuri.min.js' , __FILE__ ), array( 'hammer_js', 'web_animations_polyfil' ), false, true );
+
 	    //common scripts for ff plugin
-	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery' ), false, true );
+	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery','muuri_jss' ), false, true );
 
 	    //styles
+	    wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
 	    wp_enqueue_style('anthrohack_css', plugins_url( '/includes/css/anthrohack.css' , __FILE__ ));
 	}
 	add_action( 'wp_enqueue_scripts', 'anthrohack_enqueue_and_register_my_scripts' );
@@ -68,6 +74,7 @@ if ( ! function_exists( 'we_enqueue_admin' ) ) :
 
 		//styles
 		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));
 		wp_enqueue_style('bootstrap_slider_css', plugins_url('/includes/css/bootstrap-slider.min.css', __FILE__ ));
 		wp_enqueue_style('admin_css', plugins_url('/includes/css/anthrohack_admin.css', __FILE__ ));
 	
@@ -173,6 +180,36 @@ function anthrohack_create_post_type() {
 add_action( 'init', 'anthrohack_create_post_type' );
 
 /**
+* Add custom Columns in Admin
+*/
+//studys
+function anthrohack_study_columns_head($defaults) {
+    // var_dump($defaults);
+    $defaults['shortcode'] = 'Shortcode';
+    return $defaults;
+}
+
+// // Make these columns sortable (thank you https://wordpress.org/support/topic/viewsort-by-custom-field-in-admin-post-list/)
+function anthrohack_study_sortable_columns() {
+  return array(
+    'shortcode' => 'shortcode',
+  );
+}
+
+function anthrohack_study_columns_content($column_name, $post_ID) {
+
+    if ($column_name == 'shortcode') {
+        echo "[card_sort_study id=" . $post_ID . "]"; 
+    }  
+
+}
+add_filter('manage_study_posts_columns', 'anthrohack_study_columns_head', 10);
+add_filter( "manage_edit-study_sortable_columns", "anthrohack_study_sortable_columns" );
+add_action('manage_study_posts_custom_column', 'anthrohack_study_columns_content', 10, 2); 
+
+//end custom columns
+
+/**
 * Remove SEO metaboxes from selected CPT
 */
 function anthrohack_remove_wp_seo_meta_boxes() {
@@ -184,47 +221,25 @@ function anthrohack_remove_wp_seo_meta_boxes() {
 }
 add_action('add_meta_boxes', 'anthrohack_remove_wp_seo_meta_boxes', 100);
 
-/*
-* Register custom end point to expose CPT metadata (see anthrohack_metaboxes.php for field names)
-*/ 
-// function anthrohack_create_api_posts_meta_fields() {
- 
-// 	// first expose meta fields already defined in anthrohack_metaboxes.php
-// 	register_rest_field( 'form_embed', 'anthrohack_form_embed', array(
-//            'get_callback'    => function ( $object ) {
-// 								    //get the id of the post object array
-// 								    $post_id = $object['id'];
-// 								    //return the post meta
-// 								    return get_post_meta( $post_id );
-// 								},
-//            'schema'          => null,
-//         )
-//     );
 
-// 	//then add custom fields from scratch	
-//     register_rest_field( 'form_embed', 'anthrohack_css_url', array(
-//            'get_callback'    => function(){ return plugins_url( 'includes/css/anthrohack.css' , __FILE__ ); },
-//            'schema'          => null,
-//         )
-//     );
-// }
-// add_action( 'rest_api_init', 'anthrohack_create_api_posts_meta_fields' );
+function anthrohack_custom_content_template($content) {
+	global $post;	
+  	if ( $post->post_type == 'study' ) {
+    	if ( file_exists( plugin_dir_path( __FILE__ ) . '/templates/content-study.php' ) ) {
+            $path = plugin_dir_path( __FILE__ ) . '/templates/content-study.php';
+       		
+       		ob_start();
+				require $path;
+       		$content = ob_get_clean();
 
-function anthrohack_custom_page_template($single) {
-    global $post;
-    /* Checks for single template by post type */
-    if ( $post->post_type == 'form_embed' ) {
-        if ( file_exists( plugin_dir_path( __FILE__ ) . '/templates/single-form_embed.php' ) ) {
-            return plugin_dir_path( __FILE__ ) . '/templates/single-form_embed.php';
         }
     }
-    return $single;
+    return $content;
 }
-/* Filter the single_template with our custom function*/
-add_filter('single_template', 'anthrohack_custom_page_template');
+add_filter('the_content', 'anthrohack_custom_content_template');
 
 
-// utility for fetching params from post or options array
+// utility for fetching params from post meta or options array
 function anthrohack_check_meta_var($meta, $variable, $fallback = false){
     //checks if var exists in given meta array (can be options or page meta). returns var if exists, else returns fallback. Fallback defaults to false
     if(is_array($meta)){
@@ -244,3 +259,19 @@ function anthrohack_check_meta_var($meta, $variable, $fallback = false){
     }
     return $fallback;
 }
+
+// utility for rendering a button for adding sections in front or back end
+function buttons($hidden = false, $type = "section"){ 
+    if(!$hidden) $hidden = "";
+    ?>
+    <div class="buttons <?php echo $hidden; ?>" >
+        <a type="button" class="add-<?php echo $type; ?> button"><i class="fa fa-plus" aria-hidden="true"></i> Add <?php echo $type; ?></a>
+    </div>
+<?php }
+
+// utility for returnong pase path of the installed plugin
+function plugin_base_path(){
+    return plugin_dir_path( __FILE__ );
+}
+
+
