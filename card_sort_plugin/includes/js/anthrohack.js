@@ -16,7 +16,6 @@ var anthrohack_update_sort_items;
 
 	$(document).ready(function(){
 		// console.log("ready");
-		console.log(anthrohack_ajax_object);
 		handle_accordions();
 		bind_buttons();
 		window_resize();
@@ -36,16 +35,19 @@ var anthrohack_update_sort_items;
 
 	//this function is in the global scope and called both here and in anthrohack_draggable.js
 	//gathers all the card sort data into a single json as well as updating the pile descriptions in the modal
-	anthrohack_update_sort_items = function(isreturn){
+	anthrohack_update_sort_items = function(is_final){
 		var piles = [];
 		$.each($(".board-column.pile"), function(i, _pile){
 
 			var cards = []; 
 			$.each($(_pile).find(".board-item.card"), function(j, _card){
 				// push card object to cards array
+				var card_title = $(_card).find(".title").text();
+
 				cards.push({
 					id: $(_card).data("id"),
 					slug: $(_card).attr("id"),
+					title: card_title,
 				});
 			}); //end each pile > card
 
@@ -66,10 +68,9 @@ var anthrohack_update_sort_items;
 			study_id: $("#card_sort_study").data('study_id'),
 			study_slug: $("#card_sort_study").data('study_slug'),
 			piles: piles,
-		};
+		};		
 
-		//if this function is being called before final submit
-		if(isreturn){
+		if(is_final){
 
 			//add questions and pile description data
 			var questions = [];
@@ -83,32 +84,33 @@ var anthrohack_update_sort_items;
 				});
 
 			}); //end each question
-			sort_data.questions = questions;		
+			sort_data.questions = questions;
 
 			console.log(sort_data);
 			return sort_data;
 
 		}else{
+
 			console.log(sort_data);
-			//if not return, update modal piles
-			for(pile in sort_data.piles){
+			//use sort data to update modal piles
+			$.each(sort_data.piles, function(i, _pile){
 				
 				//find pile in modal
-				var card_list = $(".modal-piles .pile[data-id="+pile['id']+"] ul.pile-cards");
+				var card_list = $(".modal-piles .pile[data-id="+_pile['id']+"] ul");
 				if(card_list.length > 0){
 
 					//first empty card list
 					$(card_list).html('');
 
 					//then add all cards from column
-					for(card in cards){
-						$(card_list).append('<li>' + card['card_title'] + '</ul>');
-					}
+					$.each(_pile.cards, function(j , _card){
+						$(card_list).append('<li>' + _card['title'] + '</ul>');
+					});
 
 				}
-			};
-
+			});
 		}
+
 	} //end update sort items
 
 	function resize_modal(){
@@ -133,25 +135,31 @@ var anthrohack_update_sort_items;
 			e.stopImmediatePropagation();
 		
 			//validate study
-			//required questions
-			//number of cards per pile
+				//required questions
+				//number of cards per pile
+
 			var sort_data = anthrohack_update_sort_items(true);
 
-			// send via ajax
-		    $.ajax({
-		        url: anthrohack_ajax_object.ajax_url,
-		        data: {
-		            'action': 'save_sort',
-		            'data' : sort_data,
-		        },
-		        success:function(data) {
-		            // This outputs the result of the ajax request
-		            console.log(data);
-		        },
-		        error: function(errorThrown){
-		            console.log(errorThrown);
-		        }
-		    });
+			if(sort_data && anthrohack_ajax_object != undefined){
+
+				// send via ajax
+			    $.ajax({
+			        url: anthrohack_ajax_object.ajax_url,
+			        data: {
+			            'action': 'save_sort',
+			            'data' : sort_data,
+			        },
+			        success:function(response) {
+			            // This outputs the result of the ajax request
+			            // console.log("SUCCESS");
+			            console.log(response);
+			        },
+			        error: function(errorThrown){
+			        	// console.log("ERROR");
+			            console.log(errorThrown);
+			        }
+			    });
+			}
 
 		});
 	}

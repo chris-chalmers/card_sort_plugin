@@ -242,7 +242,7 @@ ul.pile-cards li {
     font-size: 0.75em;
 }
 
-ul.pile-cards li:not(first-of-type):before{
+ul.pile-cards li:not(:first-of-type):before{
 	content: ",";
 	margin-right: 5px;
 }

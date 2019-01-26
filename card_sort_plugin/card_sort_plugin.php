@@ -193,6 +193,32 @@ add_filter('manage_study_posts_columns', 'anthrohack_study_columns_head', 10);
 add_filter( "manage_edit-study_sortable_columns", "anthrohack_study_sortable_columns" );
 add_action('manage_study_posts_custom_column', 'anthrohack_study_columns_content', 10, 2); 
 
+//sorts
+function anthrohack_sort_columns_head($defaults) {
+    // var_dump($defaults);
+    $defaults['study_id'] = 'Study ID';
+    return $defaults;
+}
+
+// // Make these columns sortable (thank you https://wordpress.org/support/topic/viewsort-by-custom-field-in-admin-post-list/)
+function anthrohack_sort_sortable_columns() {
+  return array(
+    'study_id' => 'study_id',
+  );
+}
+
+function anthrohack_sort_columns_content($column_name, $post_ID) {
+
+    if ($column_name == 'study_id') {
+        $sort_meta = get_post_meta( $post_ID );
+        // var_dump($sort_meta);
+        echo anthrohack_check_meta_var($sort_meta, "study_id", "none"); 
+    }  
+
+}
+add_filter('manage_sort_posts_columns', 'anthrohack_sort_columns_head', 10);
+add_filter( "manage_edit-sort_sortable_columns", "anthrohack_sort_sortable_columns" );
+add_action('manage_sort_posts_custom_column', 'anthrohack_sort_columns_content', 10, 2); 
 //end custom columns
 
 /**
@@ -251,4 +277,21 @@ function plugin_base_path(){
     return plugin_dir_path( __FILE__ );
 }
 
+function anthrohack_get_sorts_by_study_id($study_id){
+
+    $sorts = new WP_Query(array( 
+        'post_type' => 'sort', 
+        'post_status' => 'any',
+        'posts_per_page'=> -1,
+        'meta_query' => array(
+            array(
+                'key' => 'study_id',
+                'value' => $study_id,
+                'compare' => '='
+            ),
+        ),
+    )); 
+
+    return $sorts->posts;  
+}
 
