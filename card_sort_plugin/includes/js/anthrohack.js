@@ -9,7 +9,7 @@
 
 /* Update Sort Items 
 ** this function is in the global scope and called both here and in anthrohack_draggable.js */
-var anthrohack_update_sort_items;
+var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 /*/*/
 
 (function($){
@@ -86,12 +86,12 @@ var anthrohack_update_sort_items;
 			}); //end each question
 			sort_data.questions = questions;
 
-			console.log(sort_data);
+			// console.log(sort_data);
 			return sort_data;
 
 		}else{
 
-			console.log(sort_data);
+			// console.log(sort_data);
 			//use sort data to update modal piles
 			$.each(sort_data.piles, function(i, _pile){
 				
@@ -124,6 +124,30 @@ var anthrohack_update_sort_items;
 		$("#study_modal").find(".close-button, .cancel, #study_modal:not(.modal-dialog)").click(function(){
 			$("#study_modal").fadeOut();
 		});
+
+		//bind modal 
+		$(".board-column.add-pile .btn").click(function(){
+			
+			var old_template = $("#pile_template")
+
+			//add new pile from template
+			var template = old_template.clone(true, true);
+
+			//add attr to new pile
+			var pile_id = $(".board .board-column.pile").length;
+			$(template).attr("id", "pile-" + pile_id);
+			$(template).data("id", pile_id);
+			$(template).find(".title").html("Pile " + pile_id);
+
+			$(template).insertBefore( ".board-column.add-pile" );
+			$(template).fadeIn();
+
+			var index = $(".board-column.add-pile").index();
+			anthrohack_add_item_to_grid($(template)[0], $(template).find('.board-column-content')[0], index-1);
+			console.log("added new pile with ID: " + pile_id);
+
+		});
+		
 
 		//submit buttons
 		$(".study-finished").click(function(e){

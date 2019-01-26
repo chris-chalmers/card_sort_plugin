@@ -108,7 +108,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
     </div>
   </div>
-</div><!-- end Submt modal -->
+</div><!-- end Study modal -->
 
 <div id="card_sort_study" class="" data-study_id="<?php echo $post->ID; ?>" data-study_slug="<?php echo $post->slug; ?>">
 	<div class="study-header">
@@ -197,15 +197,39 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 							} //end foreach
 						} //end if
 					}
+
+					$show_add_more = false;
+
 				}else{
 					//echo "No piles yet!";
+					$show_add_more = true;
 				}
 
-			}else{ // if no piles show "add pile" button ?>
+				$show_add_more = false;
 
-				<div class="board-item add-pile" id="add_piles">
-					<div class="board-item-content">
-						<button class="add-more-items btn btn-primary"><i class="fa fa-icon-plus"></i>Add more items</button>
+			}else{ // if no piles show "add pile" button 
+
+				$show_add_more = true;
+
+			} //end if constrained  
+
+			if( $show_add_more ){ ?>
+
+				<div class="board-column pile sorter-defined" id="pile_template" data-id="none">
+					<div class="board-column-header">
+						<h4 class="title">Pile Template</h4>	
+					</div>
+					<div class="board-column-content">
+						<div class="placeholder">
+							<div class="placeholder-content">Drag cards here</div>
+						</div>		
+
+					</div>
+				</div>
+
+				<div class="board-column add-pile" id="add_piles">
+					<div class="board-column-content">
+						<button class="add-more-items btn btn-primary"><i class="icon-anthrohack-plus"></i></i>Add a pile</button>
 					</div>
 				</div>
 				

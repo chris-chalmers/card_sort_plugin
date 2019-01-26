@@ -297,6 +297,9 @@
 		$(_this).find(".postbox-button.rename").click(function(e){
 			e.preventDefault();
 			var title = prompt("Rename: choose a new title", $(_this).find(".hndle.title .text").text());
+			if(title == undefined)
+				return;
+			
 			var slug = title.replace(/\s+/g, '_').replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^`{|}~']/g,"").toLowerCase();
 			
 			if(check_slug_against_exising_sections(slug, _this) == true){

@@ -1,4 +1,6 @@
   window.onload = function(){
+
+
     var itemContainers = [].slice.call(document.querySelectorAll('.board-column-content'));
     var columnGrids = [];
     var boardGrid;
@@ -6,6 +8,10 @@
     // Define the column grids so we can drag those
     // items around.
     itemContainers.forEach(function (container) {
+      add_grid_column(container);
+    }); //end itemContainers.forEach
+
+    function add_grid_column(container){
 
       // Instantiate column grid.
       var grid = new Muuri(container, {
@@ -55,7 +61,7 @@
       // array, so we can access it later on.
       columnGrids.push(grid);
 
-    });
+    }//end add_grid_column
 
     // Instantiate the board grid so we can drag those
     // columns around.
@@ -70,5 +76,14 @@
       dragReleaseDuration: 400,
       dragReleaseEasing: 'ease'
     });
+
+    anthrohack_add_item_to_grid = function(item, container, _index){
+      add_grid_column(container);
+      boardGrid.add(item, {index: _index});
+    }
+
+    anthrohack_remove_item_from_grid = function(item){
+      boardGrid.remove(item);
+    }
     
 }//end onload
