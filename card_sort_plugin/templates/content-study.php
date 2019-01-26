@@ -80,11 +80,15 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 									if($slug && $id_number){ ?>
 										<div class="pile" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
-											<h4 class="title"><?php echo $pile['section_title']; ?></h4>
-											<ul class="pile-cards"></ul>
-											<div class="clearfix"></div>
-											<label>Notes:</label>
-											<textarea class="sorter_notes required"></textarea>
+											<div class="pile-header">
+												<h4 class="title"><?php echo $pile['section_title']; ?></h4>
+											</div>
+											<div class="pile-body">
+												Cards: <ul class="pile-cards"></ul>
+												<div class="clearfix"></div>
+												<label>Notes:<sup class="required">*</sup></label>
+												<textarea class="sorter_notes required"></textarea>
+											</div>
 										</div>
 									<? } //end if slug + id
 								} //end foreach
@@ -98,6 +102,8 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
         <div class="modal-footer" ">
         	<span class="cancel">Cancel</span>
 			<input class="submit study-submit"  type="button" value="Submit">
+			<div class="validation-message">Please fill in all of the required fields before submitting.</div>
+
 		</div>
 
     </div>
@@ -211,8 +217,15 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 	<div class="study-content-footer" >
 		<div class="content">
+			<span class="validation-message">
+				Please put all of the cards in piles before continuing.
+				<?php if(anthrohack_check_meta_var($study_meta, "constrained") != "yes" && anthrohack_check_meta_var($study_meta, "constrained") != "on" ){ ?>
+					<br>There must be at least two piles and
+				<?php } ?>
+					<br>Each pile must have at least <?php echo anthrohack_check_meta_var($study_meta, "min_cards"); ?> cards.
+
+			</span>
 			<input class="submit study-finished" type="button" value="Next">
-			<!-- <button class="submit">Submit</button> -->
 		</div>
 	</div>
 

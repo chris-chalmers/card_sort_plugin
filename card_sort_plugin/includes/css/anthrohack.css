@@ -160,8 +160,15 @@ div#content_protocol {
   }
 }
 
-.required-note{
+.required-note,
+.validation-message{
 	font-size: 0.75em;
+	color: #999;
+}
+
+.study-content-footer .validation-message{
+	text-align: right;
+	display: inline-block;
 }
 
 /*modal styles*/
@@ -231,9 +238,35 @@ div#content_protocol {
 	text-align: left;
 }
 
+.modal-questions .question {
+    margin: 15px 0;
+}
+
+/*modal piles*/
+.modal-piles .pile {
+    background: #fff;
+    border: solid 1px #cfcfcf;
+    margin: 15px 0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.modal-piles .pile .pile-header {
+    background: #333;
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+    padding: 0 15px;
+}
+
+.modal-piles .pile .pile-body{
+    padding: 15px;
+}
+
 ul.pile-cards{
 	padding-left: 0;
 	list-style: none;
+	margin:0;
 }
 
 ul.pile-cards li {

@@ -309,7 +309,7 @@ function anthrohack_question_meta_template($question = Null){
             "title" => __( 'Required?', '_anthrohack_' ),
             "type" => "checkbox",
             "description" => "Check if this question is required. If checked, sorter will not be allowed to submit a finished sort without answering.",
-            "default_content" => "",
+            "default_content" => "on",
             "class" => ''
         ),
         array(
