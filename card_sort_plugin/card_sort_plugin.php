@@ -31,7 +31,7 @@ $background_colors = array(
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_options.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_shortcodes.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_metaboxes.php');
-// include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_ajax.php');
+include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_ajax.php');
 // include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
 
 /**
@@ -48,7 +48,7 @@ if ( ! function_exists( 'anthrohack_enqueue_and_register_my_scripts' ) ) :
 
 	    //common scripts for plugin
 	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery' ), false, true );
-        // wp_localize_script('anthrohack_js', 'anthrohack_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
+        wp_localize_script('anthrohack_js', 'anthrohack_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
 
 	    //styles
 	    wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));

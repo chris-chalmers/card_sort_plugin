@@ -8,21 +8,18 @@ function anthrohack_save_sort_callback() {
     $response = (object) array();
    //check if its an ajax request, exit if not
 
-    if($_POST){
+    if($_REQUEST){
 
         //check if its an ajax request, exit if not
-        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-            die();
-        }
-        //check $_POST vars are set, exit if any missing
-        if (!isset($_POST["sort_data"])) {
-            die();
-        }
+        // if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+        //     die();
+        // }
+        // //check $_POST vars are set, exit if any missing
+        // if (!isset($_REQUEST["sort_data"])) {
+        //     die();
+        // }
 
-        //Sanitize input data using PHP filter_var().
-        $user_Email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
-        $first_Name = filter_var($_POST["first_name"], FILTER_SANITIZE_EMAIL);
-        $last_Name = filter_var($_POST["last_name"], FILTER_SANITIZE_EMAIL);
+        $response->sort_data = $_REQUEST['data']['piles'];
 
         //save new sort and associate with study
 

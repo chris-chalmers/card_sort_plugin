@@ -3,8 +3,10 @@
 	border: none;
 	padding: 10px 30px;
 	position: relative;
-
 }
+
+.clearfix:before,.clearfix:after{content:" ";display:table;}
+.clearfix:after{clear:both;}
 
 .accordion-wrapper .accordion-btn .expand{
 	margin-top:13px;
@@ -227,4 +229,20 @@ div#content_protocol {
 .modal.anthrohack-modal .modal-body{
 	padding-top:0;
 	text-align: left;
+}
+
+ul.pile-cards{
+	padding-left: 0;
+	list-style: none;
+}
+
+ul.pile-cards li {
+    float: left;
+    display: inline-block;
+    font-size: 0.75em;
+}
+
+ul.pile-cards li:not(first-of-type):before{
+	content: ",";
+	margin-right: 5px;
 }

@@ -82,8 +82,9 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 										<div class="pile" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
 											<h4 class="title"><?php echo $pile['section_title']; ?></h4>
 											<ul class="pile-cards"></ul>
+											<div class="clearfix"></div>
 											<label>Notes:</label>
-											<textarea class="description required"></textarea>
+											<textarea class="sorter_notes required"></textarea>
 										</div>
 									<? } //end if slug + id
 								} //end foreach
@@ -96,7 +97,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
         <div class="modal-footer" ">
         	<span class="cancel">Cancel</span>
-			<input class="submit study-submit" disabled type="button" value="Submit">
+			<input class="submit study-submit"  type="button" value="Submit">
 		</div>
 
     </div>
@@ -134,7 +135,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 								if($slug && $id_number){ ?>
 
-									<div class="board-item card" id="<?php echo $slug; ?>" data-id="<?php echo $id; ?>">
+									<div class="board-item card" id="<?php echo $slug; ?>" data-id="<?php echo $id_number; ?>">
 										<div class="board-item-content card-content">
 
 											<h5 class="title"><?php echo $card["section_title"]; ?></h5>

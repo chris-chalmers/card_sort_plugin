@@ -16,7 +16,7 @@ var anthrohack_update_sort_items;
 
 	$(document).ready(function(){
 		// console.log("ready");
-		
+		console.log(anthrohack_ajax_object);
 		handle_accordions();
 		bind_buttons();
 		window_resize();
@@ -44,17 +44,18 @@ var anthrohack_update_sort_items;
 			$.each($(_pile).find(".board-item.card"), function(j, _card){
 				// push card object to cards array
 				cards.push({
+					id: $(_card).data("id"),
 					slug: $(_card).attr("id"),
-					id_number: $(_card).data("id"),
-					title: $(_card).find(".title").text(),
 				});
 			}); //end each pile > card
 
+			var modal_pile = $(".modal-piles .pile[data-id=" + $(_pile).data("id") + "]");
+
 			//push pile object to piles array
 			piles.push({
+				id: $(_pile).data("id"),
 				slug: $(_pile).attr("id"),
-				id_number: $(_pile).data("id"),
-				title: $(_pile).find(".title").text(),
+				sorter_notes: $(modal_pile).find(".sorter_notes").val(),
 				cards: cards,
 			});
 
@@ -67,7 +68,7 @@ var anthrohack_update_sort_items;
 			piles: piles,
 		};
 
-		console.log(sort_data);
+		//if this function is being called before final submit
 		if(isreturn){
 
 			//add questions and pile description data
@@ -76,33 +77,37 @@ var anthrohack_update_sort_items;
 
 				//push question object to questions array
 				questions.push({
+					id: $(_question).data("id"),
 					slug: $(_question).attr("id"),
-					id_number: $(_question).data("id"),
-					title: $(_question).find(".description").text(),
-					answer: $(_question).find(".description").val(),
+					answer: $(_question).find(".answer").val(),
 				});
 
 			}); //end each question
-			sort_data.questions = questions;
+			sort_data.questions = questions;		
 
-			$.each($(".modal-questions .question"), function(i, _question){
-
-				//push question object to questions array
-				questions.push({
-					slug: $(_question).attr("id"),
-					id_number: $(_question).data("id"),
-					title: $(_question).find(".description").text(),
-					answer: $(_question).find(".description").val(),
-				});
-
-			}); //end each question
-
+			console.log(sort_data);
 			return sort_data;
-		}else{
-			//if not return, update modal piles
-			$.each(sort_data.piles, function(i, _pile){
 
-			});
+		}else{
+			console.log(sort_data);
+			//if not return, update modal piles
+			for(pile in sort_data.piles){
+				
+				//find pile in modal
+				var card_list = $(".modal-piles .pile[data-id="+pile['id']+"] ul.pile-cards");
+				if(card_list.length > 0){
+
+					//first empty card list
+					$(card_list).html('');
+
+					//then add all cards from column
+					for(card in cards){
+						$(card_list).append('<li>' + card['card_title'] + '</ul>');
+					}
+
+				}
+			};
+
 		}
 	} //end update sort items
 
@@ -130,12 +135,11 @@ var anthrohack_update_sort_items;
 			//validate study
 			//required questions
 			//number of cards per pile
-			var sort_data = anthrohack_update_sort_items();
+			var sort_data = anthrohack_update_sort_items(true);
 
 			// send via ajax
-			// This does the ajax request
 		    $.ajax({
-		        url: anthrohack_ajax_object.ajax_url, // or example_ajax_obj.ajaxurl if using on frontend
+		        url: anthrohack_ajax_object.ajax_url,
 		        data: {
 		            'action': 'save_sort',
 		            'data' : sort_data,
@@ -149,7 +153,6 @@ var anthrohack_update_sort_items;
 		        }
 		    });
 
-			// confirmation
 		});
 	}
 
