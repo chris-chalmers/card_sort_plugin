@@ -14,15 +14,23 @@ function anthrohack_meta_boxes() {
 
     add_meta_box(  
         'anthrohack_study_options',
-        'Study Options',
+        'Study options',
         'anthrohack_study_options_callback',
         'study',
         'top'
     );
 
     add_meta_box(  
+        'anthrohack_advanced_options',
+        'Default card appearance',
+        'anthrohack_advanced_options_callback',
+        'study',
+        'top'
+    );
+
+    add_meta_box(  
         'anthrohack_study_questions',
-        'Demographic Questions',
+        'Survey questions',
         'anthrohack_study_questions_callback',
         'study',
         'top'
@@ -30,7 +38,7 @@ function anthrohack_meta_boxes() {
 
     add_meta_box(  
         'anthrohack_study_piles',
-        'Study piles',
+        'Piles',
         'anthrohack_study_piles_callback',
         'study',
         'top'
@@ -38,7 +46,7 @@ function anthrohack_meta_boxes() {
 
     add_meta_box(  
         'anthrohack_study_cards',
-        'Study Cards',
+        'Cards',
         'anthrohack_study_cards_callback',
         'study',
         'top'
@@ -81,18 +89,6 @@ function anthrohack_study_options_callback ( $post )  {
                 "default_content" => ""
             ),
             array(
-                "name" => "card_text_alignment",
-                "title" => __( "Default text alignment for cards", '_anthrohack_' ),
-                "type" => "select",
-                'select_options' => array(
-                    'center' => "center",
-                    'left' => 'left',
-                    'right' => "right",
-                ),
-                "description" => "Alignment for title and description on cards.",
-                "default_content" => "center"
-            ),
-            array(
                 "name" => "cards_instructions",
                 "title" => __( "Cards instructions", '_anthrohack_' ),
                 "type" => "textarea",
@@ -106,6 +102,30 @@ function anthrohack_study_options_callback ( $post )  {
                 "description" => "comma delimited list of email addresses to notify when new sort is made. <sup>*</sup>Optional - if left blank, site admin will be notified.",
                 "default_content" => ""
             ),
+            array(
+                "name" => "modal_title",
+                "title" => __( 'Modal Title', '_anthrohack_' ),
+                "type" => "text",
+                "description" => 'Title of modal window where sorter answers final questions.',
+                "default_content" => "Almost there",
+                "class" => ''
+            ),
+            array(
+                "name" => "modal_subtitle",
+                "title" => __( 'Modal Sub Title', '_anthrohack_' ),
+                "type" => "text",
+                "description" => 'Sub Title of modal window where sorter answers final questions.',
+                "default_content" => "Just a few more questions",
+                "class" => ''
+            ),
+            array(
+                "name" => "modal_description",
+                "title" => __( 'Instructions for pile descriptions', '_anthrohack_' ),
+                "type" => "editor",
+                "description" => 'Additional instructions or explanation for the sorter as they finish the question modal.',
+                "default_content" => "Please add a description for each pile and your reasoning for sorting cards into it the way you did.",
+                "class" => ''
+            ),
         ); //end field_array
   
     echo "Shortcode = [card_sort_study id=" . $post->ID . "]";
@@ -115,6 +135,114 @@ function anthrohack_study_options_callback ( $post )  {
     }
     
 }//end study options callback
+function anthrohack_advanced_options_callback ( $post )  {
+    wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
+    $anthrohack_settings = get_option( 'anthrohack_settings' );  
+
+        $anthrohack_field_array = array(
+            array(
+                "name" => "card_text_alignment",
+                "title" => __( "Default card text alignment", '_anthrohack_' ),
+                "type" => "select",
+                'select_options' => array(
+                    'center' => "center",
+                    'left' => 'left',
+                    'right' => "right",
+                ),
+                "description" => "Alignment for title and description on cards.",
+                "default_content" => "center"
+            ),
+            array(
+                "name" => "color_scheme",
+                "title" => __( 'Default card text color', '_anthrohack_' ),
+                "type" => "select",
+                "select_options" => array(
+                    "Light" => "light",
+                    "Theme Default" => "default",
+                    "Dark" => "dark",
+                    ),
+                "description" => "Choose light or dark text color (For best readability, choose light for darker background colors/images and vice versa)",
+                "default_content" => "default",
+                "class" => ''
+            ),
+            array(
+                "name" => "padding",
+                "title" => __( 'Default card Padding', '_anthrohack_' ),
+                "type" => "select",
+                "select_options" => array(
+                    "0 pixels" => "0",
+                    "15 pixels" => "15",
+                    "30 pixels" => "30",
+                    "50 pixels" => "50",
+                    "100 pixels" => "100",
+                    "200 pixels" => "200",
+                    ),
+                "description" => "Padding top and bottom for card (The amount of space between edge and beginning/end of content).",
+                "default_content" => "30",
+                "class" => ''
+            ),
+            array(
+                "name" => "hero_image",
+                "title" => __( 'Default card background image', '_anthrohack_' ),
+                "type" => "image",
+                "description" => "This image will be used as a full-bleed background. It will appear behind the main color if transparency is set.",
+                "default_content" => "",
+                "class" => ''
+            ),
+            array(
+                "name" => "background_position",
+                "title" => __( 'Default card background Position', '_anthrohack_' ),
+                "type" => "select",
+                "select_options" => array(
+                    "Center" => "center",
+                    "Top" => "top",
+                    "Bottom" => "bottom",
+                    ),
+                "description" => "Align the background to the top center or bottom of the screen",
+                "default_content" => "center",
+                "class" => ''
+            ),
+            array(
+                "name" => "background_color",
+                "title" => __( 'Default card background color', '_anthrohack_' ),
+                "type" => "color_selector",
+                "description" => "Optional - Choose a background color for this card. If no color selected, background image will be used.",
+                "default_content" => "",
+                "class" => ''
+            ),
+            array(
+                "name" => "background_color2",
+                "title" => __( 'Default card background color 2', '_anthrohack_' ),
+                "type" => "color_selector",
+                "description" => "Optional - Choose a secondary overlay color to create a gradient. If selected, gradient will appear over background image.",
+                "default_content" => "",
+            ),
+            array(
+                "name" => "gradient_angle",
+                "title" => __( 'Default gradient angle', '_anthrohack_' ),
+                "type" => "text",
+                "description" => 'Choose an angle 0 - 360, Zero being  vertical (Top -> Bottom)',
+                "default_content" => "",
+                "class" => ''
+            ),
+            array(
+                "name" => "background_transparency",
+                "title" => __( 'Default background transparency (%)', '_anthrohack_' ),
+                "type" => "slider",
+                "range" => array(0,100),
+                "description" => "Choose the percentage transparency (0-100) for the background color of this card. Video or image will appear behind color.",
+                "default_content" => "100",
+                "class" => ''
+            ),
+        ); //end field_array
+  
+    echo "Shortcode = [card_sort_study id=" . $post->ID . "]";
+
+    foreach ($anthrohack_field_array as $field_array) {
+        echo anthrohack_render_meta_field($field_array);
+    }
+    
+}//end advanced options callback
 
 // utility for rendering a button for adding sections in front or back end
 function buttons($hidden = false, $type = "section"){ 
@@ -185,18 +313,27 @@ function anthrohack_question_meta_template($question = Null){
             "class" => ''
         ),
         array(
-            "name" => "hero_image",
-            "title" => __( 'Question Background image', '_anthrohack_' ),
-            "type" => "image",
-            "description" => "<sup>+</sup>Optional. The image will appear alongside the question text.",
-            "default_content" => "",
-            "class" => ''
-        ), 
-        array(
             "name" => "content",
-            "title" => __( 'Question text', '_anthrohack_' ),
+            "title" => __( 'Additional question text', '_anthrohack_' ),
             "type" => "editor",
+            "description" => "<sup>*</sup>Optional - This text will replace the title when it's shown on the front end.",
             "default_content" => "",
+            "class" => ""
+        ),
+        array(
+            "name" => "field_type",
+            "title" => __( 'Field type', '_anthrohack_' ),
+            "type" => "select",
+            "select_options" => array(
+                "text" => "text",
+                "textarea" => "textarea",
+                "select" => "select",
+                "checkbox" => "checkbox",
+                "radio" => "radio",
+                "datepicker" => "datepicker",
+                "locationpicker" => "locationpicker",
+            ),
+            "default_content" => "text",
             "class" => ""
         ),
          
@@ -253,12 +390,42 @@ function anthrohack_pile_meta_template($pile = Null){
     $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
     $anthrohack_piles_fields = array(
-         array(
-            "name" => "content",
-            "title" => __( 'Description', '_anthrohack_' ),
-            "type" => "editor",
+        array(
+            "name" => "color_scheme",
+            "title" => __( 'Color Scheme', '_anthrohack_' ),
+            "type" => "select",
+            "select_options" => array(
+                "Light" => "light",
+                "Theme Default" => "default",
+                "Dark" => "dark",
+                ),
+            "description" => "Choose light or dark text color (For best readability, choose light for darker background colors/images and vice versa)",
+            "default_content" => "default",
+            "class" => ''
+        ),
+        array(
+            "name" => "background_color",
+            "title" => __( 'card background color', '_anthrohack_' ),
+            "type" => "color_selector",
+            "description" => "Optional - Choose a background color for this card. If no color selected, background image will be used.",
             "default_content" => "",
-            "class" => ""
+            "class" => ''
+        ),
+        array(
+            "name" => "background_color2",
+            "title" => __( 'card background color', '_anthrohack_' ),
+            "type" => "color_selector",
+            "description" => "Optional - Choose a secondary overlay color to create a gradient. If selected, gradient will appear over background image.",
+            "default_content" => anthrohack_check_meta_var($anthrohack_settings, "page_bg_color2", ""),
+            "class" => ''
+        ),
+        array(
+            "name" => "gradient_angle",
+            "title" => __( 'Gradient angle', '_anthrohack_' ),
+            "type" => "text",
+            "description" => 'Choose an angle 0 - 360, Zero being  vertical (Top -> Bottom)',
+            "default_content" => "",
+            "class" => ''
         ),
 
     );
@@ -387,7 +554,7 @@ function anthrohack_card_meta_template($card = Null){
             "description" => 'Choose an angle 0 - 360, Zero being  vertical (Top -> Bottom)',
             "default_content" => "",
             "class" => ''
-         ),
+        ),
         array(
             "name" => "background_transparency",
             "title" => __( 'Background transparency (%)', '_anthrohack_' ),
@@ -397,15 +564,6 @@ function anthrohack_card_meta_template($card = Null){
             "default_content" => "100",
             "class" => ''
         ),
-         array(
-            "name" => "content",
-            "title" => __( 'Description', '_anthrohack_' ),
-            "description" => "<sup>*</sup>Optional - include a short description to be displayed in the card body. Text will be truncated to 200 characters.",
-            "type" => "editor",
-            "default_content" => "",
-            "class" => ""
-        ),
-
     );
 
     if($card == Null){
@@ -687,7 +845,10 @@ function anthrohack_meta_save( $post_id ) {
         "anthrohack_questions",
         "anthrohack_cards",
         "anthrohack_piles",
-        "card_text_alignment"
+        "card_text_alignment",
+        "modal_title",
+        "modal_subtitle",
+        "modal_description"
     );
 
     foreach($revision_field_array as $field){

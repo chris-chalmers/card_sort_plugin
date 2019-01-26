@@ -42,6 +42,8 @@
         columnGrids.forEach(function (grid) {
           grid.refreshItems();
         });
+        //this function is defined in anthrohack.js
+        anthrohack_update_sort_items();
       })
       .on('layoutStart', function () {
         // Let's keep the board grid up to date with the
@@ -69,4 +71,4 @@
       dragReleaseEasing: 'ease'
     });
     
-  }
+}//end onload

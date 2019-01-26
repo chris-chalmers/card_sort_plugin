@@ -4,74 +4,119 @@
 $study_meta = get_post_meta( $post->ID );
 $anthrohack_settings = get_option( 'anthrohack_settings' ); 
 ?>
-<div id="card_sort_study" class="">
-	<div class="study-header">
-		<?php /*<h1 class="title"><?php echo get_the_title(); ?></h1>*/ ?>
 
+<!-- Sort Submit Modal -->
+<div class="modal anthrohack-modal fade" id="study_modal" role="dialog" aria-labelledby="study_modal" style="display: none;">
+  <div class="modal-spacer"></div>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        	<h2 class="title"><?php echo anthrohack_check_meta_var($study_meta, "modal_title", "Almost there"); ?></h2>
+        	<h5 class="subtitle"><?php echo anthrohack_check_meta_var($study_meta, "modal_subtitle", "Just a few more questions"); ?></h5>
+        	<span class="close-button"><i class="icon-anthrohack-x"></i><br><span class="close-label">Close</span></span>
+        </div>
+		<div class="modal-body">
+
+			<?php //render Questions
+			if(anthrohack_check_meta_var($study_meta, "anthrohack_questions")){
+				$questions = json_decode($study_meta["anthrohack_questions"][0], true); 
+				if($questions){ ?>
+
+			        	<div class="modal-questions">
+			        		<h3 class="title">Survey questions</h3>	
+							<?php foreach ($questions as $question) { 
+								$slug = anthrohack_check_meta_var($question, 'section_slug');
+								$id_number = anthrohack_check_meta_var($question, 'section_id_number'); 
+
+								if($slug && $id_number){ ?>
+
+									<div class="question" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
+
+										<div class="description">
+											<?php if(anthrohack_check_meta_var($question, $slug . '_content')){ ?>
+												<?php echo do_shortcode( base64_decode($question[$slug . '_content'])); ?>
+											<?php }else{ ?>
+												<?php echo $question['section_title']; ?>
+											<?php } ?>
+
+											<?php if(anthrohack_check_meta_var($question, $slug . '_required')){ 
+												$required = true; ?>
+												<sup class="required">*</sup>
+											<?php }else{
+												$required = false;
+											} ?>
+										</div>
+
+										<?php // render question field ?>
+										<textarea class="answer <?php echo ($required != true)? 'required' : ''; ?>"></textarea>
+
+									</div><!--end question -->
+
+							<?php } //end if slug + id
+							} //end foreach ?>
+							<div class="required-note"><sup class="required">*</sup>Required question</div>
+						</div>							
+				<?php }//end if 
+			} //end questions	?>
+
+			<div class="modal-piles">
+
+				<h3 class="title">Piles</h3>
+				<div class="pile-instructions">
+					<?php echo do_shortcode(anthrohack_check_meta_var($study_meta, "modal_description", "")); ?>
+				</div>
+
+				<?php //piles 
+				if(anthrohack_check_meta_var($study_meta, "constrained") == "yes" || anthrohack_check_meta_var($study_meta, "constrained") == "on" ){ 
+					//render Constrained piles
+					if(anthrohack_check_meta_var($study_meta, "anthrohack_piles")){
+						$piles = json_decode($study_meta["anthrohack_piles"][0], true);
+						// var_dump($piles);
+						if($piles){
+							if(is_array($piles)){
+								foreach ($piles as $pile) { 
+									$slug = anthrohack_check_meta_var($pile, 'section_slug');
+									$id_number = anthrohack_check_meta_var($pile, 'section_id_number');
+
+									if($slug && $id_number){ ?>
+										<div class="pile" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
+											<h4 class="title"><?php echo $pile['section_title']; ?></h4>
+											<ul class="pile-cards"></ul>
+											<label>Notes:</label>
+											<textarea class="description required"></textarea>
+										</div>
+									<? } //end if slug + id
+								} //end foreach
+							} //end if
+						}
+					} //end if piles
+				} //end piles  ?>
+			</div>
+        </div>
+
+        <div class="modal-footer" ">
+        	<span class="cancel">Cancel</span>
+			<input class="submit study-submit" disabled type="button" value="Submit">
+		</div>
+
+    </div>
+  </div>
+</div><!-- end Submt modal -->
+
+<div id="card_sort_study" class="" data-study_id="<?php echo $post->ID; ?>" data-study_slug="<?php echo $post->slug; ?>">
+	<div class="study-header">
 		<?php //study description
 		if(anthrohack_check_meta_var($study_meta, "description")){ ?>
-			<!-- begin accordion wrap -->
-			<div class="accordion-wrapper collapsed">
-		        
-		        <div type="button" class="accordion-btn" data-toggle="collapse" data-target="#content_protocol">
-		        	<h3 class="title">Research protocol<span class="expand">Click to expand <i class="icon-anthrohack-chevron-down"></i></span></h3>
-				</div> 
-
-				<!-- Collapsible Element HTML -->
-	        	<div id="content_protocol" class="collapse">
-					<?php echo do_shortcode($study_meta["description"][0]); ?>
-				</div>
-			</div>
-		<?php } ?>
-
-		
-		<?php //render Questions
-		if(anthrohack_check_meta_var($study_meta, "anthrohack_questions")){
-			$questions = json_decode($study_meta["anthrohack_questions"][0], true); 
-			if($questions){ ?>
-				<div class="accordion-wrapper collapsed">
-					<div type="button" class="accordion-btn" data-toggle="collapse" data-target="#questions">
-			        	<h3 class="title">Questions<span class="expand">Click to expand <i class="icon-anthrohack-chevron-down"></i></span></h3>
-					</div> 
-
-					<!-- Collapsible Element HTML -->
-		        	<div id="questions" class="collapse">
-						<?php foreach ($questions as $question) { 
-							$slug = anthrohack_check_meta_var($question, 'section_slug');
-							$id_number = anthrohack_check_meta_var($question, 'section_id_number'); 
-
-							if($slug && $id_number){ ?>
-
-								<div class="question">
-
-									<?php if(anthrohack_check_meta_var($question, $slug . '_hero_image')){ ?>
-										<div class="question-image"><img src="<?php echo $question[$slug . '_hero_image']; ?>" alt="<?php echo $slug; ?>" /></div>
-									<?php } ?>
-
-									<div class="description">
-									<?php if(anthrohack_check_meta_var($question, $slug . '_content')){ ?>
-										<?php echo do_shortcode( base64_decode($question[$slug . '_content'])); ?>
-									<?php }else{ ?>
-										<?php echo $question['section_title']; ?>
-									<?php } ?>
-									</div>
-
-									<textarea class="answer" data-id="<php echo $id_number; ?>" id="<php echo $slug; ?>"></textarea>
-								</div><!--end question -->
-
-						<?php } //end if slug + id
-						} //end foreach ?>
-					</div>
-				</div>		
-			<?php }//end if questions 
-		} //end check_meta_var	?>
+        	<h3 class="title">Research protocol</h3>
+			<?php echo do_shortcode($study_meta["description"][0]); 
+		} ?>
 	</div>
 
 	<div class="study-content">
 		<div class="board">
 
 			<?php //cards ?>
-			<div class="board-column pile" id="unsorted" data-id="0">
+			<div class="board-column cards" id="unsorted" data-id="0">
 				<div class="board-column-header">
 					<h4 class="title">Unsorted</h4>
 					<div class="description"><?php echo anthrohack_check_meta_var($study_meta, "cards_instructions", "Drag cards onto a pile."); ?></div>
@@ -108,7 +153,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 								<? } //end if slug + id
 							} //end foreach
 						}
-					}	
+					} //end if cards	
 				} ?>
 				</div>
 			</div> <?php //end cards ?>
@@ -131,10 +176,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 								if($slug && $id_number){ ?>
 									<div class="board-column pile" id="<?php echo $slug; ?>" data-id="<?php echo $id_number; ?>">
 										<div class="board-column-header">
-											<h4 class="title"><?php echo $pile['section_title']; ?></h4>
-											<?php if(anthrohack_check_meta_var($pile, $slug . '_description')){ ?>
-												<div class="description"><?php echo $pile[$slug . '_description']; ?></div>
-											<?php } ?>	
+											<h4 class="title"><?php echo $pile['section_title']; ?></h4>	
 										</div>
 										<div class="board-column-content">
 																	
@@ -166,9 +208,9 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 	</div>
 
-	<div class="study-content-footer add-pile" ">
+	<div class="study-content-footer" >
 		<div class="content">
-			<input class="submit" type="button" value="Submit" onClick="window.location.reload()">
+			<input class="submit study-finished" type="button" value="Next">
 			<!-- <button class="submit">Submit</button> -->
 		</div>
 	</div>

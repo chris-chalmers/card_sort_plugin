@@ -31,7 +31,8 @@ $background_colors = array(
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_options.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_shortcodes.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_metaboxes.php');
-include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
+// include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_ajax.php');
+// include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
 
 /**
 * Add the scripts and styles we'll need to frontend...
@@ -45,8 +46,9 @@ if ( ! function_exists( 'anthrohack_enqueue_and_register_my_scripts' ) ) :
         wp_enqueue_script( 'muuri_js', 'https://unpkg.com/muuri@0.7.1/dist/muuri.min.js', array( 'hammer_js', 'web_animations_polyfil' ), false, true );
         wp_enqueue_script( 'draggable_js', plugins_url( '/includes/js/anthrohack_draggable.js' , __FILE__ ), array( 'muuri_js' ), false, true );
 
-	    //common scripts for ff plugin
+	    //common scripts for plugin
 	    wp_enqueue_script( 'anthrohack_js', plugins_url( '/includes/js/anthrohack.js' , __FILE__ ), array( 'jquery' ), false, true );
+        // wp_localize_script('anthrohack_js', 'anthrohack_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
 
 	    //styles
 	    wp_enqueue_style('icomoon_css', plugins_url('/includes/fonts/icomoon.css', __FILE__ ));

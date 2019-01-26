@@ -29,24 +29,24 @@ if ( ! function_exists( 'anthrohack_shortcode_study' ) ) :
          extract(shortcode_atts(array(
             'id' => '',
             'class' => '',
+            'show_title' => 'false',
         ), $atts));         
 
         if($id != ""){
+
             $loop = new WP_Query( array( 'post_type' => 'study', 'posts_per_page' => 1, 'id' => $id ) );                        
             while ( $loop->have_posts() ) : $loop->the_post(); 
 
                 global $post; 
-                if ( file_exists( plugin_base_path() . '/templates/content-study.php' ) ) {
-                                                
+                if($show_title && $show_title != 'false')
+                    echo '<h1 class="title">'.$post->post_title.'</h1>';
 
-                    $path = plugin_base_path() . '/templates/content-study.php';
-                    
-                    // ob_start();
+                $path = plugin_base_path() . '/templates/content-study.php';
+                if ( file_exists( $path ))
                     require $path;
-                    // echo ob_get_clean();
-                }
-            endwhile;
 
+            endwhile;
+            wp_reset_postdata();
         } //end if
     }
     add_shortcode("card_sort_study", "anthrohack_shortcode_study");

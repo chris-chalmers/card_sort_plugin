@@ -46,6 +46,12 @@
 	overflow: hidden;
 }
 
+div#content_protocol {
+    padding: 0 15px;
+    margin-top:15px;
+}
+
+/*Card sorting board*/
 .study-content {
     background: #efefef;
     border: solid 1px #ccc;
@@ -54,6 +60,11 @@
     padding: 30px;
 }
 
+.board-column-header .title {
+    font-size: 24px;
+    margin: 0;
+    line-height: 50px;
+}
 
 .study-content-footer {
     text-align: right;
@@ -145,4 +156,75 @@
   .board-item-content span {
     display: none;
   }
+}
+
+.required-note{
+	font-size: 0.75em;
+}
+
+/*modal styles*/
+.modal.anthrohack-modal{
+	position: fixed;
+	top:0;
+	left:0;
+	height:auto;
+	opacity: 1;
+	text-align: center;
+	background: rgba(0,0,0,0.85);
+	z-index: 1000;
+	max-width: unset!important;
+	max-height: unset!important;
+
+}
+
+.modal.anthrohack-modal .modal-dialog {
+    position:relative;
+    background: #fff; 
+    width: 60%;
+    margin: auto;
+    overflow-y: scroll;
+    margin-top: 25px; 
+}
+
+.modal.anthrohack-modal .close-button .close-label{
+	display: none;
+	position: absolute;
+	font-size: 0.5em;
+	right:0;
+	top: 20px;
+}
+
+.modal.anthrohack-modal .close-button:hover .close-label{
+	display: block;
+}
+
+.modal.anthrohack-modal .close-button {
+    position: absolute;
+    display: block;
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.modal.anthrohack-modal .modal-header,
+.modal.anthrohack-modal .modal-footer,
+.modal.anthrohack-modal .modal-body{
+	padding:15px 30px 0;
+}
+
+.modal.anthrohack-modal .modal-footer {
+    text-align: right;
+    padding-bottom: 30px;
+}
+
+.modal.anthrohack-modal .modal-footer .cancel{
+	line-height: 50px;
+	display: inline-block;
+	cursor:pointer;
+	margin-right: 30px;
+}
+
+.modal.anthrohack-modal .modal-body{
+	padding-top:0;
+	text-align: left;
 }

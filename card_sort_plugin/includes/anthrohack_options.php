@@ -7,17 +7,104 @@ function anthrohack_settings_init(  ) {
 
 	$anthrohack_options_sections = array(
 		array(
-			"section_name" => "General settings",
+			"section_name" => "Study defaults",
 			"section_description" => "",			
 			"section_slug" => "general",	
 			"section_options" => array(
 				(object) array(
-					"name" => "description",
-					"title" => __( "Research porotocol", '_anthrohack_' ),
-					"type" => "editor",
-					"description" => "Description of the study, goals and methodology.",
-					"default_content" => ""
-				),
+		            "name" => "card_text_alignment",
+		            "title" => __( "Default card text alignment", '_anthrohack_' ),
+		            "type" => "select",
+		            'select_options' => array(
+		                'center' => "center",
+		                'left' => 'left',
+		                'right' => "right",
+		            ),
+		            "description" => "Alignment for title and description on cards.",
+		            "default_content" => "center"
+		        ),
+		        (object) array(
+		            "name" => "color_scheme",
+		            "title" => __( 'Default card text color', '_anthrohack_' ),
+		            "type" => "select",
+		            "select_options" => array(
+		                "Light" => "light",
+		                "Theme Default" => "default",
+		                "Dark" => "dark",
+		                ),
+		            "description" => "Choose light or dark text color (For best readability, choose light for darker background colors/images and vice versa)",
+		            "default_content" => "default",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "padding",
+		            "title" => __( 'Default card Padding', '_anthrohack_' ),
+		            "type" => "select",
+		            "select_options" => array(
+		                "0 pixels" => "0",
+		                "15 pixels" => "15",
+		                "30 pixels" => "30",
+		                "50 pixels" => "50",
+		                "100 pixels" => "100",
+		                "200 pixels" => "200",
+		                ),
+		            "description" => "Padding top and bottom for card (The amount of space between edge and beginning/end of content).",
+		            "default_content" => "30",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "hero_image",
+		            "title" => __( 'Default card background image', '_anthrohack_' ),
+		            "type" => "image",
+		            "description" => "This image will be used as a full-bleed background. It will appear behind the main color if transparency is set.",
+		            "default_content" => "",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "background_position",
+		            "title" => __( 'Default card background Position', '_anthrohack_' ),
+		            "type" => "select",
+		            "select_options" => array(
+		                "Center" => "center",
+		                "Top" => "top",
+		                "Bottom" => "bottom",
+		                ),
+		            "description" => "Align the background to the top center or bottom of the screen",
+		            "default_content" => "center",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "background_color",
+		            "title" => __( 'Default card background color', '_anthrohack_' ),
+		            "type" => "color_selector",
+		            "description" => "Optional - Choose a background color for this card. If no color selected, background image will be used.",
+		            "default_content" => "",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "background_color2",
+		            "title" => __( 'Default card background color 2', '_anthrohack_' ),
+		            "type" => "color_selector",
+		            "description" => "Optional - Choose a secondary overlay color to create a gradient. If selected, gradient will appear over background image.",
+		            "default_content" => "",
+		        ),
+		        (object) array(
+		            "name" => "gradient_angle",
+		            "title" => __( 'Default gradient angle', '_anthrohack_' ),
+		            "type" => "text",
+		            "description" => 'Choose an angle 0 - 360, Zero being  vertical (Top -> Bottom)',
+		            "default_content" => "",
+		            "class" => ''
+		        ),
+		        (object) array(
+		            "name" => "background_transparency",
+		            "title" => __( 'Default background transparency (%)', '_anthrohack_' ),
+		            "type" => "slider",
+		            "range" => array(0,100),
+		            "description" => "Choose the percentage transparency (0-100) for the background color of this card. Video or image will appear behind color.",
+		            "default_content" => "100",
+		            "class" => ''
+		        ),
 			),
 		)
 	);
