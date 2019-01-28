@@ -172,12 +172,12 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 
 			//add new modal pile to modal from template
 			var old_template = $("#modal_pile_template");
-			var modal_template = old_template.clone(true, true);
-			$(modal_template).appendTo(".modal-piles");
-			$(modal_template).attr("id", "pile-" + pile_id);
-			$(modal_template).attr('data-id', pile_id);
-			$(modal_template).find(".title span").html("Pile " + pile_id);
-			$(modal_template).show();
+			var new_modal_pile = old_template.clone(true, true);
+			$(new_modal_pile).appendTo(".modal-piles");
+			$(new_modal_pile).attr("id", "pile-" + pile_id);
+			$(new_modal_pile).attr('data-id', pile_id);
+			$(new_modal_pile).find(".title span").html("Pile " + pile_id);
+			$(new_modal_pile).show();
 
 
 			//bind remove button 
@@ -197,7 +197,28 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 				}
 
 			});
-			
+
+			//bind edit title button 
+			$(new_modal_pile).find(".edit-title").click(function(){
+
+				var new_title = prompt("Choose a new title", $(new_modal_pile).find('.title span').text().trim());
+				if(new_title == undefined)
+					return;
+
+				var slug = new_title.replace(/\s+/g, '_').replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^`{|}~']/g,"").toLowerCase();
+
+				$.each($(".modal-piles .pile"), function(i, _pile){
+					if( $(_pile) != $(new_modal_pile) && $(_pile).attr('id') == new_title ){
+						alert("That title is already in use");
+						return; //break out of the function early
+					}
+				});
+
+				//replace title with new title
+				$(new_modal_pile).attr('id', slug);
+				$(new_modal_pile).find('.title span').html(new_title);
+
+			});		
 
 			console.log("added new pile with ID: " + pile_id);
 
