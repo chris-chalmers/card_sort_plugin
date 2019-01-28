@@ -37,7 +37,7 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 	//gathers all the card sort data into a single json as well as updating the pile descriptions in the modal
 	anthrohack_update_sort_items = function(is_final){
 		var piles = [];
-		$.each($(".board-column.pile"), function(i, _pile){
+		$.each($(".board-column.pile:not(#pile_template)"), function(i, _pile){
 
 			var cards = []; 
 			$.each($(_pile).find(".board-item.card"), function(j, _card){
@@ -47,16 +47,18 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 				cards.push({
 					id: $(_card).data("id"),
 					slug: $(_card).attr("id"),
-					title: card_title,
+					card_title: card_title,
 				});
 			}); //end each pile > card
 
 			var modal_pile = $(".modal-piles .pile[data-id=" + $(_pile).data("id") + "]");
+			var pile_title = $(modal_pile).find(".title span").text();
 
 			//push pile object to piles array
 			piles.push({
 				id: $(_pile).data("id"),
 				slug: $(_pile).attr("id"),
+				pile_title: pile_title,
 				sorter_notes: $(modal_pile).find(".sorter_notes").val(),
 				cards: cards,
 			});
@@ -91,8 +93,8 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 
 		}else{
 
-			// console.log(sort_data);
 			//use sort data to update modal piles
+			console.log(sort_data);
 			$.each(sort_data.piles, function(i, _pile){
 				
 				//find pile in modal
@@ -104,7 +106,7 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 
 					//then add all cards from column
 					$.each(_pile.cards, function(j , _card){
-						$(card_list).append('<li>' + _card['title'] + '</ul>');
+						$(card_list).append('<li>' + _card['card_title'] + '</ul>');
 					});
 
 				}
@@ -125,25 +127,61 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			$("#study_modal").fadeOut();
 		});
 
-		//bind modal 
+		$("#study_modal").click(function(e){
+		   if(e.target == this){ // only if the target itself has been clicked
+		       $("#study_modal").fadeOut();
+		   }
+		});
+
+		//add piles
 		$(".board-column.add-pile .btn").click(function(){
 			
-			var old_template = $("#pile_template")
-
-			//add new pile from template
-			var template = old_template.clone(true, true);
-
-			//add attr to new pile
 			var pile_id = $(".board .board-column.pile").length;
-			$(template).attr("id", "pile-" + pile_id);
-			$(template).data("id", pile_id);
-			$(template).find(".title").html("Pile " + pile_id);
+			if(undefined == pile_id)
+				pile_id	= 0;
 
-			$(template).insertBefore( ".board-column.add-pile" );
-			$(template).fadeIn();
+			//add new pile to board from template
+			var old_template = $("#pile_template");
+			var new_pile = old_template.clone(true, true);
+			$(new_pile).insertBefore( ".board-column.add-pile" );
+			$(new_pile).attr("id", "pile-" + pile_id);
+			$(new_pile).attr('data-id', pile_id);
+			$(new_pile).find(".title span").html("Pile " + pile_id);
+			$(new_pile).fadeIn();
 
+			//add pile to muuli board
 			var index = $(".board-column.add-pile").index();
-			anthrohack_add_item_to_grid($(template)[0], $(template).find('.board-column-content')[0], index-1);
+			anthrohack_add_item_to_grid($(new_pile)[0], $(new_pile).find('.board-column-content')[0], index-1);
+
+			//add new modal pile to modal from template
+			var old_template = $("#modal_pile_template");
+			var modal_template = old_template.clone(true, true);
+			$(modal_template).appendTo(".modal-piles");
+			$(modal_template).attr("id", "pile-" + pile_id);
+			$(modal_template).attr('data-id', pile_id);
+			$(modal_template).find(".title span").html("Pile " + pile_id);
+			$(modal_template).show();
+
+
+			//bind remove button 
+			$(new_pile).find(".remove-pile").click(function(){
+
+				if($(new_pile).find(".board-item.card").length == 0){
+					var pile_id = $(new_pile).data("id");
+
+					//remove element from muuri grid
+					anthrohack_remove_item_from_grid($(new_pile)[0]);
+
+					//remove pile element from modal
+					$(".modal-piles").find(".pile[data-id=" + pile_id + "]").remove();
+
+				}else{
+					alert("Piles must be empty of cards before being removed.")
+				}
+
+			});
+			
+
 			console.log("added new pile with ID: " + pile_id);
 
 		});

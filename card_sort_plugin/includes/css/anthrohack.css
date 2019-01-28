@@ -59,7 +59,6 @@ div#content_protocol {
     border: solid 1px #ccc;
     margin-top: 50px;
     /* width: 100%; */
-    padding: 30px;
 }
 
 .pile .board-column-content {
@@ -87,7 +86,7 @@ div#content_protocol {
   position: absolute;
   left: 0;
   right: 0;
-  width: 30%;
+  /*width: 30%;*/
   margin: 0 1.5%;
   background: #fff;
   border-radius: 3px;
@@ -98,10 +97,12 @@ div#content_protocol {
 .board-column.muuri-item-releasing {
   z-index: 2;
 }
+
 .board-column.muuri-item-dragging {
   z-index: 3;
   cursor: move;
 }
+
 .board-column-header {
   position: relative;
   height: 50px;
@@ -113,40 +114,44 @@ div#content_protocol {
   color: #fff;
   border-radius: 3px 3px 0 0;
 }
-@media (max-width: 600px) {
-  .board-column-header {
-    text-indent: -1000px;
-  }
-}
+
 .board-column.todo .board-column-header {
   background: #4A9FF9;
 }
+
 .board-column.working .board-column-header {
   background: #f9944a;
 }
+
 .board-column.done .board-column-header {
   background: #2ac06d;
 }
+
 .board-column-content {
   position: relative;
   border: 10px solid transparent;
   min-height: 95px;
 }
+
 .board-item {
   position: absolute;
   width: 100%;
   margin: 5px 0;
 }
+
 .board-item.muuri-item-releasing {
   z-index: 9998;
 }
+
 .board-item.muuri-item-dragging {
   z-index: 9999;
   cursor: move;
 }
+
 .board-item.muuri-item-hidden {
   z-index: 0;
 }
+
 .board-item-content {
   position: relative;
   padding: 20px;
@@ -157,7 +162,6 @@ div#content_protocol {
   -webkit-box-shadow: 0px 1px 3px 0 rgba(0,0,0,0.2);
   box-shadow: 0px 1px 3px 0 rgba(0,0,0,0.2);
 }
-
 
 /*add more piles stuff*/
 .board-column.add-pile {
@@ -174,7 +178,8 @@ div#content_protocol {
     vertical-align: middle;
 }
 
-#pile_template{
+#pile_template,
+#modal_pile_template{
 	display: none;
 }
 
@@ -189,6 +194,7 @@ div#content_protocol {
 .study-content-footer .validation-message{
 	text-align: right;
 	display: inline-block;
+	/*max-width: 50%;*/
 }
 
 /*modal styles*/
@@ -279,6 +285,19 @@ div#content_protocol {
     padding: 0 15px;
 }
 
+.pile .title i {
+    cursor: pointer;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.board .pile .title i {
+    font-size: 16px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 .modal-piles .pile .pile-body{
     padding: 15px;
 }
@@ -300,13 +319,54 @@ ul.pile-cards li:not(:first-of-type):before{
 	margin-right: 5px;
 }
 
-/*Responsive styles*/
+/************************/
+/*responsive breakpoints*/
+/************************/
 
-@media (max-width: 600px) {
-  .board-item-content {
-    text-align: center;
-  }
-  .board-item-content span {
-    display: none;
-  }
+/*only for phones*/
+@media screen and (max-width: 479px) {
+
+	.board-column {
+	    width: 100%;
+	}
+
+	.study-content {
+	    padding: 10px;
+	}
+
+}
+
+/*only for mobile*/
+@media screen and (max-width: 767px) {
+
+	.board-column {
+	    width: 45%;
+	}
+
+	.study-content {
+	    padding: 30px 2%;
+	}
+
+}
+
+/*desktop*/
+@media screen and (min-width: 768px) {
+
+	.board-column {
+	    width: 30%;
+	}
+
+	.study-content {
+	    padding: 30px;
+	}
+}
+
+/*large*/
+@media screen and (min-width: 992px) { 
+
+}
+
+/*X large*/
+@media screen and (min-width: 1200px) {
+
 }

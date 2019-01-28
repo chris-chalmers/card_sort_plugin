@@ -83,7 +83,7 @@
     }
 
     anthrohack_remove_item_from_grid = function(item){
-      boardGrid.remove(item);
+      boardGrid.remove(item, {removeElements: true});
     }
     
 }//end onload

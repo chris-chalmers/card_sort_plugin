@@ -67,8 +67,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 				</div>
 
 				<?php //piles 
-				if(anthrohack_check_meta_var($study_meta, "constrained") == "yes" || anthrohack_check_meta_var($study_meta, "constrained") == "on" ){ 
-					//render Constrained piles
+					//render piles if any ( Constrained )
 					if(anthrohack_check_meta_var($study_meta, "anthrohack_piles")){
 						$piles = json_decode($study_meta["anthrohack_piles"][0], true);
 						// var_dump($piles);
@@ -88,14 +87,30 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 												<div class="clearfix"></div>
 												<label>Notes:<sup class="required">*</sup></label>
 												<textarea class="sorter_notes required"></textarea>
+												<div class="required-note"><sup class="required">*</sup>Required</div>
 											</div>
 										</div>
 									<? } //end if slug + id
 								} //end foreach
 							} //end if
 						}
-					} //end if piles
-				} //end piles  ?>
+					} //end if piles ?>
+
+					<?php //render modal pile template ?>
+					<div class="pile sorter-defined" data-id="none" id="modal_pile_template">
+						<div class="pile-header">
+							<h4 class="title"><span></span><i class="edit-title icon-anthrohack-pencil"></i></h4>
+						</div>
+						<div class="pile-body">
+							Cards: <ul class="pile-cards"></ul>
+							<div class="clearfix"></div>
+							<label>Notes:<sup class="required">*</sup></label>
+							<textarea class="sorter_notes required"></textarea>
+							<div class="required-note"><sup class="required">*</sup>Required</div>
+						</div>
+					</div>
+
+
 			</div>
         </div>
 
@@ -119,6 +134,11 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 		} ?>
 	</div>
 
+	<div class="card-instructions">
+		<h4 class="title">Instructions</h4>
+		<?php echo anthrohack_check_meta_var($study_meta, "cards_instructions", "Drag cards onto a pile."); ?>
+	</div>
+
 	<div class="study-content">
 		<div class="board">
 
@@ -126,7 +146,6 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 			<div class="board-column cards" id="unsorted" data-id="0">
 				<div class="board-column-header">
 					<h4 class="title">Unsorted</h4>
-					<div class="description"><?php echo anthrohack_check_meta_var($study_meta, "cards_instructions", "Drag cards onto a pile."); ?></div>
 				</div>
 				<div class="board-column-content">
 				<?php //cards
@@ -150,10 +169,6 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 												<div class="bg_image full-bleed" style="background:url(<?php echo $card[$slug . "_bg_image"]; ?>);"></div>
 											<?php } ?>
 												
-
-											<?php if(anthrohack_check_meta_var($card, $slug . "_content")){ ?>
-												<div class="description"><?php echo $card[$slug . "_content"]; ?></div>
-											<?php } ?>
 										</div>
 									</div>
 
@@ -217,7 +232,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 				<div class="board-column pile sorter-defined" id="pile_template" data-id="none">
 					<div class="board-column-header">
-						<h4 class="title">Pile Template</h4>	
+						<h4 class="title"><span>Pile template</span><i class="remove-pile icon-anthrohack-cross"></i></h4>
 					</div>
 					<div class="board-column-content">
 						<div class="placeholder">
@@ -242,12 +257,11 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 	<div class="study-content-footer" >
 		<div class="content">
 			<span class="validation-message">
-				Please put all of the cards in piles before continuing.
+				<span>Please put all of the cards in piles before continuing.</span>
 				<?php if(anthrohack_check_meta_var($study_meta, "constrained") != "yes" && anthrohack_check_meta_var($study_meta, "constrained") != "on" ){ ?>
-					<br>There must be at least two piles and
+					<span> There must be at least two piles and </span>
 				<?php } ?>
-					<br>Each pile must have at least <?php echo anthrohack_check_meta_var($study_meta, "min_cards"); ?> cards.
-
+				<span>Each pile must have at least <?php echo anthrohack_check_meta_var($study_meta, "min_cards"); ?> cards.</span>
 			</span>
 			<input class="submit study-finished" type="button" value="Next">
 		</div>
