@@ -140,6 +140,23 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			if(undefined == pile_id)
 				pile_id	= 0;
 
+			
+			if(check_pile_exist(pile_id)){
+			//if pile id already exists, iterate numbers until it doesnt
+				do {
+					pile_id ++;
+					if(check_pile_exist(pile_id))
+						break;
+
+				} while (0);
+			}
+
+			// returns true if muuli board element with pile_id exists
+			function check_pile_exist(pile_id){
+				return $(".board .board-column.pile[id=pile-" + pile_id + "]").length > 0 ;
+			}
+
+
 			//add new pile to board from template
 			var old_template = $("#pile_template");
 			var new_pile = old_template.clone(true, true);
