@@ -1,6 +1,40 @@
 <?php
+
+//sets the options page item in the admin menu
+function anthrohack_add_admin_menu(  ) { 
+	$theme_name = get_bloginfo( 'name' );
+	$anthrohack_settings = get_option( 'anthrohack_settings' );
+	$icon_url = (isset ($anthrohack_settings["anthrohack_favicvon"]))? $anthrohack_settings["anthrohack_favicvon"] : "dashicons-admin-generic";	
+	$theme_name = get_bloginfo( 'name' );
+
+	add_submenu_page( 
+		'edit.php?post_type=study', 
+		'Study Submissions', 
+		'Study Submissions', 
+		'manage_options', 
+		'anthrohack_submissions', 
+		'anthrohack_submissions_page'
+	);
+
+	add_submenu_page( 
+		'edit.php?post_type=study', 
+        'Study Options',
+        'Study Options',
+		'manage_options', 
+		'anthrohack_options', 
+		'anthrohack_options_page',
+        $icon_url
+	);
+
+}
 add_action( 'admin_menu', 'anthrohack_add_admin_menu' );
-add_action( 'admin_init', 'anthrohack_settings_init' );
+
+
+function anthrohack_submissions_page(){ ?>
+	<div class="submissions-index">
+		<button class="download btn btn-primary"><span class="dashicons dashicons-download"></span>Export CSV</button>
+	</div>
+<? }
 
 function anthrohack_settings_init(  ) { 
 	register_setting( 'anthrohackPluginPage', 'anthrohack_settings' );
@@ -128,24 +162,8 @@ function anthrohack_settings_init(  ) {
 			}
 		}
 	}
-}
-
-//sets the options page item in the admin menu
-function anthrohack_add_admin_menu(  ) { 
-	$theme_name = get_bloginfo( 'name' );
-	$anthrohack_settings = get_option( 'anthrohack_settings' );
-	$icon_url = (isset ($anthrohack_settings["anthrohack_favicvon"]))? $anthrohack_settings["anthrohack_favicvon"] : "dashicons-admin-generic";	
-	$theme_name = get_bloginfo( 'name' );
-	add_menu_page( 
-        $theme_name . ' Options',
-        $theme_name . ' Options',
-		'manage_options', 
-		'anthrohack_options', 
-		'anthrohack_options_page',
-        $icon_url,
-		2 
-	);
-}
+} //end settings init
+add_action( 'admin_init', 'anthrohack_settings_init' );
 
 //add stndard WP save button to each section
 function anthrohack_settings_section_callback($atts) { 

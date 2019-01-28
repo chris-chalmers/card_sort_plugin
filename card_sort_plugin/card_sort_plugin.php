@@ -152,7 +152,7 @@ function anthrohack_create_post_type() {
                 'add_new_item' => 'Add New Sort',
                 'view_item' => 'View Sort'
             ),
-        'public' => true,
+        'public' => false,
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array(),
