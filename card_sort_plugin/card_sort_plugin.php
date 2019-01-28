@@ -152,7 +152,7 @@ function anthrohack_create_post_type() {
                 'add_new_item' => 'Add New Sort',
                 'view_item' => 'View Sort'
             ),
-        'public' => false,
+        'public' => true,
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array(),
@@ -277,20 +277,42 @@ function plugin_base_path(){
     return plugin_dir_path( __FILE__ );
 }
 
-function anthrohack_get_sorts_by_study_id($study_id){
+function anthrohack_get_studies($study_id = null){
 
-    $sorts = new WP_Query(array( 
+    $atts = array( 
+        'post_type' => 'study', 
+        'post_status' => 'any',
+        'posts_per_page'=> -1,
+    );
+
+    if($study_id != null){
+        $atts['id'] = $study_id;
+    }
+
+    $studies = new WP_Query($atts); 
+
+    return $studies->posts;  
+}
+
+function anthrohack_get_sorts($study_id = null){
+
+    $atts = array( 
         'post_type' => 'sort', 
         'post_status' => 'any',
         'posts_per_page'=> -1,
-        'meta_query' => array(
+    );
+
+    if($study_id != null){
+        $atts['meta_query'] = array(
             array(
                 'key' => 'study_id',
                 'value' => $study_id,
                 'compare' => '='
             ),
-        ),
-    )); 
+        );
+    }
+
+    $sorts = new WP_Query($atts); 
 
     return $sorts->posts;  
 }

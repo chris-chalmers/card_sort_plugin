@@ -254,6 +254,55 @@ button.handlediv.toggle {
     display: none;
 }
 
+
+/*submissions page*/
+
+div#submissions{
+    padding:30px 0;
+}
+
+div#submissions .sort,
+div#submissions .submissions-header {
+    background-color: #fff;
+    display: block;
+    padding: 15px;
+    margin: 0 0 15px;
+}
+
+#submissions .button span.dashicons {
+    vertical-align: middle;
+    margin: 0 5px;
+}
+
+div#submissions .submissions-header .submission-header-item{
+    display: inline-block;
+    margin-right: 15px;
+}
+
+div#submissions table{
+    width: 100%;
+    border-collapse: collapse; 
+    border-spacing: 0;
+    border-top: solid 1px #999;
+    border-left: solid 1px #999;
+}
+
+div#submissions table tr td,
+div#submissions table tr th{
+    border-bottom: solid 1px #999;
+    border-right: solid 1px #999;
+    padding: 5px 15px;
+}
+
+div#submissions .submission-cards .title,
+div#submissions .submission-piles .title,
+div#submissions .submission-questions .title{
+    font-size: 18px;
+    margin-bottom: 7px;
+}
+
+
+
 /************************/
 /*responsive breakpoints*/
 /************************/

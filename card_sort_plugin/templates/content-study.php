@@ -33,12 +33,13 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 									<div class="question" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
 
 										<div class="description">
-											<?php if(anthrohack_check_meta_var($question, $slug . '_content')){ ?>
-												<?php echo do_shortcode( base64_decode($question[$slug . '_content'])); ?>
-											<?php }else{ ?>
-												<?php echo $question['section_title']; ?>
-											<?php } ?>
-
+											<span>
+												<?php if(anthrohack_check_meta_var($question, $slug . '_content')){ ?>
+													<?php echo do_shortcode( base64_decode($question[$slug . '_content'])); ?>
+												<?php }else{ ?>
+													<?php echo $question['section_title']; ?>
+												<?php } ?>
+											</span>
 											<?php if(anthrohack_check_meta_var($question, $slug . '_required')){ 
 												$required = true; ?>
 												<sup class="required">*</sup>

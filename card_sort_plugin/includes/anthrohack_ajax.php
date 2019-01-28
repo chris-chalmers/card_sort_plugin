@@ -26,7 +26,7 @@ function anthrohack_save_sort_callback() {
             //chack if study exists
             if($study != NULL){
                 
-                $post_title = $study->post_title . " - sort " . (count(anthrohack_get_sorts_by_study_id( $_REQUEST['data']['study_id'] )) + 1);
+                $post_title = $study->post_title . " - sort " . (count(anthrohack_get_sorts( $_REQUEST['data']['study_id'] )) + 1);
 
                 //save new sort and associate with study
                 $sort_id = wp_insert_post(array (
@@ -40,8 +40,8 @@ function anthrohack_save_sort_callback() {
                 if ($sort_id) {
                     // insert post meta
                     add_post_meta($sort_id, 'study_id', $_REQUEST['data']['study_id'], true);
-                    add_post_meta($sort_id, 'piles', $_REQUEST['data']['piles'], true);
-                    add_post_meta($sort_id, 'piles', $_REQUEST['data']['questions'], true);
+                    add_post_meta($sort_id, 'piles', json_encode($_REQUEST['data']['piles']), true);
+                    add_post_meta($sort_id, 'questions', json_encode($_REQUEST['data']['questions']), true);
 
                     //send success response
                     $response->message = "Success! - saved " . $post_title;

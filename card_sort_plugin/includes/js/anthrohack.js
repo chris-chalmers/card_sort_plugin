@@ -83,6 +83,7 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 					id: $(_question).data("id"),
 					slug: $(_question).attr("id"),
 					answer: $(_question).find(".answer").val(),
+					question_text: $(_question).find(".description span").text().trim(),
 				});
 
 			}); //end each question
