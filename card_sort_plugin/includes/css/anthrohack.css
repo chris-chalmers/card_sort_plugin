@@ -129,6 +129,7 @@ div#content_protocol {
     font-size: 24px;
     margin: 0;
     line-height: 50px;
+    color:#fff;
 }
 
 .study-content-footer {
@@ -328,6 +329,12 @@ div#content_protocol {
     margin: 15px 0;
 }
 
+.modal-questions .question textarea,
+.modal-piles .pile textarea{
+    width: 100%;
+    padding:10px;
+}
+
 /*modal piles*/
 .modal-piles .pile {
     background: #fff;
@@ -343,6 +350,12 @@ div#content_protocol {
     display: inline-block;
     width: 100%;
     padding: 0 15px;
+}
+
+.modal-piles .pile .pile-header .title {
+    color: #fff;
+    line-height: 55px;
+    margin: auto;
 }
 
 .pile .title i {

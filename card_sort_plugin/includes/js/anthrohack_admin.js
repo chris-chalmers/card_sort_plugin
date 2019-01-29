@@ -115,7 +115,7 @@
     }
 
     function show_message(message, duration = false){
-    	
+
     	alert(message);
 
     	if(duration){
@@ -946,12 +946,12 @@
 	            // header:["Piles"],
 	        });
 
-	        // var strData3 = $(_sort).find("#card-table").table2CSV({
-	        //     delivery: 'value',
-	        //     header:["Cards"]
-	        // });
+	        var strData3 = $(_sort).find("#card-table").table2CSV({
+	            delivery: 'value',
+	            // header:["Cards"]
+	        });
 
-	        strData += $(_sort).find(".title.sort-title").text().trim() + '\n' + $(_sort).find(".date").text().trim() + '\n' + Questions + '\n' + strData1 + '\n' + Piles + '\n' + strData2 + '\n\n'; // + strData3 + '\n\n';
+	        strData += $(_sort).find(".title.sort-title").text().trim() + '\n' + $(_sort).find(".date").text().trim() + '\n' + "Questions" + '\n' + strData1 + '\n' + "Piles" + '\n' + strData2 + '\n' + "Cards" + '\n' + strData3 + '\n\n';
 
         });
 
