@@ -53,7 +53,6 @@
 					}
 				});
 			}
-
 		});
 
         $("#submissions .download.button").click(function(e) {
@@ -67,6 +66,53 @@
             // console.log(selected);
            	download_csv('pile_sort_data', selected);
         }); 
+
+        $("#submissions .delete.button").click(function(e) {
+            var selected_ids = [];
+            if (confirm("Are you sure you want to delete selected submissions? (cannot be undone)") == true) {
+			
+	            $.each($("#submissions .sort"), function(i, _sort){
+	            	if($(_sort).find($("input.select-sort")).attr('checked') != undefined){
+	            		selected_ids.push($(_sort).attr("data-id"));
+	            	}
+	            });
+
+	            console.log(selected_ids);
+
+	           	if(selected_ids.length > 0){
+
+						// send via ajax
+					    $.ajax({
+					        url: anthrohack_ajax_object.ajax_url,
+					        data: {
+					            'action': 'delete_sorts',
+					            'data' : {sorts_to_delete: selected_ids},
+					        },
+					        success:function(response) {
+					            // This outputs the result of the ajax request
+					            // console.log("SUCCESS");
+					            // if(response.message != undefined)
+					            	// show_message(response.message, 1500);
+					            // window.location.reload(false); 
+					            console.log(response);
+					        },
+					        error: function(errorThrown){
+					        	// console.log("ERROR");
+
+					            console.log(errorThrown);
+					        }
+					    });
+					}
+
+
+           }
+        }); 
+    }
+
+    function show_message(message, duration = false){
+    	if(duration){
+
+    	}
     }
 
 	//update the hidden field of checkboxes (this is done for easier form submitting)
@@ -892,12 +938,12 @@
 	            // header:["Piles"],
 	        });
 
-	        var strData3 = $(_sort).find("#card-table").table2CSV({
-	            delivery: 'value',
-	            header:["Cards"]
-	        });
+	        // var strData3 = $(_sort).find("#card-table").table2CSV({
+	        //     delivery: 'value',
+	        //     header:["Cards"]
+	        // });
 
-	        strData += $(_sort).find(".title.sort-title").text().trim() + '\n\n' + $(_sort).find(".date").text().trim() + '\n\n' + strData1 + '\n\n' + strData2 + '\n\n' + strData3 + '\n\n';
+	        strData += $(_sort).find(".title.sort-title").text().trim() + '\n' + $(_sort).find(".date").text().trim() + '\n' + Questions + '\n' + strData1 + '\n' + Piles + '\n' + strData2 + '\n\n'; // + strData3 + '\n\n';
 
         });
 

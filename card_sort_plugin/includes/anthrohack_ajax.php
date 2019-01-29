@@ -3,6 +3,8 @@
 add_action( 'wp_ajax_save_sort', 'anthrohack_save_sort_callback' );
 add_action( 'wp_ajax_nopriv_save_sort', 'anthrohack_save_sort_callback' );
 
+add_action( 'wp_ajax_delete_sorts', 'anthrohack_delete_sorts_callback' );
+
 function anthrohack_save_sort_callback() {
 
     $response = (object) array();
@@ -72,6 +74,78 @@ function anthrohack_save_sort_callback() {
         $response->message = "There was an error";
     }
 
+    echo json_encode($response);
+    wp_die();//needed to return a valid response;
+}
+
+function anthrohack_delete_sorts_callback() {
+
+    $response = (object) array();
+   //check if its an ajax request, exit if not
+    $log = [];
+    if($_REQUEST){
+
+        //check if its an ajax request, exit if not
+        // if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+        //     die();
+        // }
+        //check $_POST vars are set, exit if any missing
+        if (!isset($_REQUEST['data']['sorts_to_delete'])) {
+            die();
+        }
+
+        // $response->ids = json_encode($_REQUEST['data']['sorts_to_delete']);
+        // echo json_encode($response);
+        // wp_die();//needed to return a valid response;
+
+        //enclose any tasks in a try/catch because any PHP errors throw a CORS exception in AJAX
+        try {
+
+            $sort_ids = $_REQUEST['data']['sorts_to_delete'];  
+
+            // array_push($log, $sort_ids);
+
+            //check if study exists
+            if($sort_ids){
+
+                $i = 0;
+                foreach ($sort_ids as $sort_id) {
+
+                   $success = wp_delete_post($sort_id, true);
+
+                   // array_push($log, $sort_id);
+
+                   if(!$success){
+                        if ($i == 0)
+                            $fail_message .= "Failed to delete submissions: ";   
+                        $i ++; 
+                        $fail_message .= $sort_id . ", ";
+                   }
+               }
+
+                if (NULL != $fail_message) {
+                    
+                    //send success response
+                    $response->message = $fail_message;
+                }else{
+                   $response->message = "Success! - all submissions deleted.";
+                }
+
+            }else{
+                $response->message = "Error - no sort ids";
+            } //end if
+   
+
+        }catch (exception $e) {
+
+            $response->message = $e->getMessage();
+            $response->code = $e->getCode();
+        }
+        
+    }else{
+        $response->message = "There was an error";
+    }
+    $response->log = $log;
     echo json_encode($response);
     wp_die();//needed to return a valid response;
 }

@@ -101,7 +101,7 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 									if($slug && $id_number){ ?>
 										<div class="pile" data-id="<?php echo $id_number; ?>" id="<?php echo $slug; ?>">
 											<div class="pile-header">
-												<h4 class="title"><?php echo $pile['section_title']; ?></h4>
+												<h4 class="title"><span><?php echo $pile['section_title']; ?></span></h4>
 											</div>
 											<div class="pile-body">
 												Cards: <ul class="pile-cards"></ul>

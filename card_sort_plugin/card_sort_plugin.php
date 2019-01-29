@@ -81,6 +81,7 @@ if ( ! function_exists( 'anthrohack_enqueue_admin' ) ) :
         wp_enqueue_script( 'wp_tinymce_js', plugins_url( '/includes/js/tinymce/wordpress-tinymce.js' , __FILE__ ) , array( 'jquery' ), false, true );
 		wp_enqueue_script('admin_js', plugins_url( '/includes/js/anthrohack_admin.js' , __FILE__ ), array( 'jquery', 'wp-color-picker', 'wp_tinymce_js', 'media-editor' ) );
         wp_localize_script('admin_js', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
+        wp_localize_script('admin_js', 'anthrohack_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' )));
 
 
 	}
@@ -151,9 +152,9 @@ function anthrohack_create_post_type() {
                 'singular_name' => __( 'Sort' ),
                 'edit_item' => 'Edit Sort',
                 'add_new_item' => 'Add New Sort',
-                'view_item' => 'View Sort'
+                'view_item' => 'View Sort'  
             ),
-        'public' => false,
+        'public' => true,
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array(),
@@ -282,7 +283,7 @@ function anthrohack_get_studies($study_id = null){
 
     $atts = array( 
         'post_type' => 'study', 
-        'post_status' => 'any',
+        'post_status' => 'publish',
         'posts_per_page'=> -1,
     );
 
@@ -299,7 +300,7 @@ function anthrohack_get_sorts($study_id = null){
 
     $atts = array( 
         'post_type' => 'sort', 
-        'post_status' => 'any',
+        'post_status' => 'publish',
         'posts_per_page'=> -1,
     );
 
