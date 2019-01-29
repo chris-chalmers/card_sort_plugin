@@ -235,6 +235,8 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			e.preventDefault();
 			e.stopImmediatePropagation();
 
+			var redirect_url = $(this).data('redirect');
+
 			$('#submit_modal').fadeIn();
 			do_spinner("#submit_modal", "in");
 		
@@ -248,6 +250,7 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 
 				// send via ajax
 			    $.ajax({
+			    	type : "POST",
 			        url: anthrohack_ajax_object.ajax_url,
 			        data: {
 			            'action': 'save_sort',
@@ -257,7 +260,12 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			            // This outputs the result of the ajax request
 			            // console.log("SUCCESS");
 			            // do_spinner("#submit_modal", "out");
-			            window.location.reload(false); 
+			            if(redirect_url != undefined){
+			            	window.location.href = redirect_url;
+			            }else{
+			            	window.location.reload(false); 
+			            }
+			            
 			            console.log(response);
 			        },
 			        error: function(errorThrown){

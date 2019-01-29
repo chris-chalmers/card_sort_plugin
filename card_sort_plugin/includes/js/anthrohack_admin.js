@@ -83,18 +83,23 @@
 
 						// send via ajax
 					    $.ajax({
+					    	type : "POST",
 					        url: anthrohack_ajax_object.ajax_url,
 					        data: {
 					            'action': 'delete_sorts',
 					            'data' : {sorts_to_delete: selected_ids},
 					        },
-					        success:function(response) {
+					        success:function(data) {
 					            // This outputs the result of the ajax request
 					            // console.log("SUCCESS");
-					            // if(response.message != undefined)
-					            	// show_message(response.message, 1500);
-					            // window.location.reload(false); 
-					            console.log(response);
+					            var response = JSON.parse(data);
+					            if(response){
+						            if(response.message != undefined)
+						            	show_message(response.message, 1500);
+						            if(response.success == true)
+						            	window.location.reload(false); 
+						            console.log(response);
+						        }
 					        },
 					        error: function(errorThrown){
 					        	// console.log("ERROR");
@@ -110,8 +115,11 @@
     }
 
     function show_message(message, duration = false){
-    	if(duration){
+    	
+    	alert(message);
 
+    	if(duration){
+    		
     	}
     }
 

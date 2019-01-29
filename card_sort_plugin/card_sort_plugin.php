@@ -154,7 +154,7 @@ function anthrohack_create_post_type() {
                 'add_new_item' => 'Add New Sort',
                 'view_item' => 'View Sort'  
             ),
-        'public' => true,
+        'public' => false,
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array(),
@@ -317,5 +317,29 @@ function anthrohack_get_sorts($study_id = null){
     $sorts = new WP_Query($atts); 
 
     return $sorts->posts;  
+}
+
+// returns an array of pages wrapped in select options
+function anthrohack_get_page_names_and_ids(){
+
+    $atts = array( 
+        'post_type' => 'page', 
+        'post_status' => 'publish',
+        'posts_per_page'=> -1,
+    );
+
+    $pages = new WP_Query($atts); 
+    $output = array(
+        "none"=> "Select a page",
+    );
+
+    if(property_exists($pages, 'posts')){
+        foreach ($pages->posts as $page) {
+            $output[$page->post_title] = $page->ID;
+        }
+        return $output;
+    }else{
+        return array();
+    }
 }
 

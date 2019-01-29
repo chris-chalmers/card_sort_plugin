@@ -59,6 +59,8 @@ function anthrohack_study_options_callback ( $post )  {
     wp_nonce_field( basename( __FILE__ ), 'anthrohack_nonce' );
     $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
+        $page_options = anthrohack_get_page_names_and_ids();
+
         $anthrohack_field_array = array(
             array(
                 "name" => "description",
@@ -79,14 +81,14 @@ function anthrohack_study_options_callback ( $post )  {
                 "title" => __( "Minimum number of piles", '_anthrohack_' ),
                 "type" => "text",
                 "description" => "Minimum number of piles sorter is allowed to create (if study is unconstrained).",
-                "default_content" => ""
+                "default_content" => "2"
             ),
             array(
                 "name" => "min_cards",
                 "title" => __( "Minimum cards per pile", '_anthrohack_' ),
                 "type" => "text",
                 "description" => "Minimum number of cards that sorter is allowed to put in each pile.",
-                "default_content" => ""
+                "default_content" => "2"
             ),
             array(
                 "name" => "cards_instructions",
@@ -96,10 +98,25 @@ function anthrohack_study_options_callback ( $post )  {
                 "default_content" => "Drag each card onto a pile."
             ),
             array(
-                "name" => "email",
+                "name" => "thank_you_page",
+                "title" => __( "Thank you page", '_anthrohack_' ),
+                "type" => "select",
+                'select_options' => $page_options,
+                "description" => "Select a page to redirect to after sort submission. If none selected, page will simply refresh.",
+                "default_content" => "none"
+            ),
+            array(
+                "name" => "notify_researcher",
+                "title" => __( "Email notifications", '_anthrohack_' ),
+                "type" => "checkbox",
+                "description" => "Select this box to enable email notifications when a new sort is submitted",
+                "default_content" => "off"
+            ),
+            array(
+                "name" => "notification_email",
                 "title" => __( "Researcher notification email", '_anthrohack_' ),
                 "type" => "textarea",
-                "description" => "comma delimited list of email addresses to notify when new sort is made. <sup>*</sup>Optional - if left blank, site admin will be notified.",
+                "description" => "A comma delimited list of email addresses to notify when new sort is made. <sup>*</sup>Optional - if left blank, site admin will be notified.",
                 "default_content" => ""
             ),
             array(
@@ -848,7 +865,10 @@ function anthrohack_meta_save( $post_id ) {
         "card_text_alignment",
         "modal_title",
         "modal_subtitle",
-        "modal_description"
+        "modal_description",
+        "thank_you_page",
+        "notify_researcher",
+        "notification_email",
     );
 
     foreach($revision_field_array as $field){

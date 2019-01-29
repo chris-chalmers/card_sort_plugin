@@ -8,27 +8,27 @@ add_action( 'wp_ajax_delete_sorts', 'anthrohack_delete_sorts_callback' );
 function anthrohack_save_sort_callback() {
 
     $response = (object) array();
-   //check if its an ajax request, exit if not
+   //check if its an ajax POST, exit if not
 
-    if($_REQUEST){
+    if($_POST){
 
-        //check if its an ajax request, exit if not
-        // if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+        //check if its an ajax POST, exit if not
+        // if (!isset($_SERVER['HTTP_X_POSTED_WITH']) AND strtolower($_SERVER['HTTP_X_POSTED_WITH']) != 'xmlhttpPOST') {
         //     die();
         // }
         //check $_POST vars are set, exit if any missing
-        if (!isset($_REQUEST['data']['piles'])) {
+        if (!isset($_POST['data']['piles'])) {
             die();
         }
 
         //enclose any tasks in a try/catch because any PHP errors throw a CORS exception in AJAX
         try {
 
-            $study = get_post($_REQUEST['data']['study_id']);
+            $study = get_post($_POST['data']['study_id']);
             //chack if study exists
             if($study != NULL){
                 
-                $post_title = $study->post_title . " - sort " . (count(anthrohack_get_sorts( $_REQUEST['data']['study_id'] )) + 1);
+                $post_title = $study->post_title . " - sort " . (count(anthrohack_get_sorts( $_POST['data']['study_id'] )) + 1);
 
                 //save new sort and associate with study
                 $sort_id = wp_insert_post(array (
@@ -37,13 +37,13 @@ function anthrohack_save_sort_callback() {
                    'post_status' => 'publish',
                 ));
 
-                // $response->post_id = $_REQUEST['data']['study_id']; 
+                // $response->post_id = $_POST['data']['study_id']; 
 
                 if ($sort_id) {
                     // insert post meta
-                    add_post_meta($sort_id, 'study_id', $_REQUEST['data']['study_id'], true);
-                    add_post_meta($sort_id, 'piles', json_encode($_REQUEST['data']['piles']), true);
-                    add_post_meta($sort_id, 'questions', json_encode($_REQUEST['data']['questions']), true);
+                    add_post_meta($sort_id, 'study_id', $_POST['data']['study_id'], true);
+                    add_post_meta($sort_id, 'piles', json_encode($_POST['data']['piles']), true);
+                    add_post_meta($sort_id, 'questions', json_encode($_POST['data']['questions']), true);
 
                     //send success response
                     $response->message = "Success! - saved " . $post_title;
@@ -81,27 +81,27 @@ function anthrohack_save_sort_callback() {
 function anthrohack_delete_sorts_callback() {
 
     $response = (object) array();
-   //check if its an ajax request, exit if not
+   //check if its an ajax POST, exit if not
     $log = [];
-    if($_REQUEST){
+    if($_POST){
 
-        //check if its an ajax request, exit if not
-        // if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+        //check if its an ajax POST, exit if not
+        // if (!isset($_SERVER['HTTP_X_POSTED_WITH']) AND strtolower($_SERVER['HTTP_X_POSTED_WITH']) != 'xmlhttpPOST') {
         //     die();
         // }
         //check $_POST vars are set, exit if any missing
-        if (!isset($_REQUEST['data']['sorts_to_delete'])) {
+        if (!isset($_POST['data']['sorts_to_delete'])) {
             die();
         }
 
-        // $response->ids = json_encode($_REQUEST['data']['sorts_to_delete']);
+        // $response->ids = json_encode($_POST['data']['sorts_to_delete']);
         // echo json_encode($response);
         // wp_die();//needed to return a valid response;
 
         //enclose any tasks in a try/catch because any PHP errors throw a CORS exception in AJAX
         try {
 
-            $sort_ids = $_REQUEST['data']['sorts_to_delete'];  
+            $sort_ids = $_POST['data']['sorts_to_delete'];  
 
             // array_push($log, $sort_ids);
 
@@ -113,7 +113,7 @@ function anthrohack_delete_sorts_callback() {
 
                    $success = wp_delete_post($sort_id, true);
 
-                   // array_push($log, $sort_id);
+                   array_push($log, $sort_id);
 
                    if(!$success){
                         if ($i == 0)
@@ -128,7 +128,8 @@ function anthrohack_delete_sorts_callback() {
                     //send success response
                     $response->message = $fail_message;
                 }else{
-                   $response->message = "Success! - all submissions deleted.";
+                    $response->success = true;
+                    $response->message = "Success! - all submissions deleted.";
                 }
 
             }else{

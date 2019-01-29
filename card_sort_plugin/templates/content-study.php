@@ -135,9 +135,16 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 			</div>
         </div>
 
+        <?php if(anthrohack_check_meta_var($study_meta, 'thank_you_page')){ 
+        		//http://futuredev.wpengine.com/anthrohack/?p=1
+        		$redirect = 'data-redirect="' . get_site_url() . "?p=" . $study_meta['thank_you_page'][0] . '"';
+        }else{
+        	$redirect = "";
+        }?>
+
         <div class="modal-footer" ">
         	<span class="cancel">Cancel</span>
-			<input class="submit study-submit"  type="button" value="Submit">
+			<input class="submit study-submit"  type="button" value="Submit" <?php echo $redirect; ?> >
 			<div class="validation-message">Please fill in all of the required fields before submitting.</div>
 
 		</div>
@@ -278,11 +285,11 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 	<div class="study-content-footer" >
 		<div class="content">
 			<span class="validation-message">
-				<span>Please put all of the cards in piles before continuing.</span>
+				<span>Please put all of the cards in piles before continuing. </span>
 				<?php if(anthrohack_check_meta_var($study_meta, "constrained") != "yes" && anthrohack_check_meta_var($study_meta, "constrained") != "on" ){ ?>
 					<span> There must be at least two piles and </span>
 				<?php } ?>
-				<span>Each pile must have at least <?php echo anthrohack_check_meta_var($study_meta, "min_cards"); ?> cards.</span>
+				<span>each pile must have at least <?php echo anthrohack_check_meta_var($study_meta, "min_cards"); ?> cards.</span>
 			</span>
 			<input class="submit study-finished" type="button" value="Next">
 		</div>
