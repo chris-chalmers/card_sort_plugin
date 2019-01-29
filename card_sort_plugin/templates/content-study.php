@@ -5,6 +5,26 @@ $study_meta = get_post_meta( $post->ID );
 $anthrohack_settings = get_option( 'anthrohack_settings' ); 
 ?>
 
+
+<!-- Success Submit Modal -->
+<div class="modal anthrohack-submit-modal fade" id="submit_modal" role="dialog" aria-labelledby="submit_modal" style="display: none;">
+  	<div class="modal-spacer"></div>
+	  	<div class="anthrohack-preloader">
+		  	<div class="anthrohack-preloader-container">
+			    <div class="spinner">
+			        <div class="dot1"></div>
+			        <div class="dot2"></div>
+			    </div>
+			</div>
+		</div>
+  	<div class="modal-dialog modal-sm" role="document">
+    	<div class="modal-content">
+
+
+		</div>
+	</div>
+</div>
+
 <!-- Sort Submit Modal -->
 <div class="modal anthrohack-modal fade" id="study_modal" role="dialog" aria-labelledby="study_modal" style="display: none;">
   <div class="modal-spacer"></div>

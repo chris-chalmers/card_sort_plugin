@@ -10,6 +10,7 @@
 		handle_checkboxes();
 		handle_sliders();
 		piles_visible();
+		bind_submissions_btns();
 		
 	}); //end doc ready
 
@@ -27,6 +28,46 @@
 			}
 		}, interval );
 	}
+
+	function bind_submissions_btns(){
+
+		$("input#select_all_sorts").change(function(){
+			if($(this).attr('checked') != undefined){
+				console.log("check all");
+				$("#submissions .sort:visible input.select-sort").attr('checked','checked');
+			}else{
+				$("input.select-sort").removeAttr('checked');
+			}
+		});
+
+		$("select#studies_picker").change(function(){
+
+			$("input.select-sort, input#select_all_sorts").removeAttr('checked');
+			var study_id = $(this).val();
+			if( study_id != 'all'){
+				$.each($("#submissions .sort"), function(i, _sort){
+					if($(_sort).attr('data-study_id') == study_id){
+						$(_sort).fadeIn();
+					}else{
+						$(_sort).fadeOut();
+					}
+				});
+			}
+
+		});
+
+        $("#submissions .download.button").click(function(e) {
+            //see https://github.com/rubo77/table2CSV
+            var selected = [];
+            $.each($("#submissions .sort"), function(i, _sort){
+            	if($(_sort).find($("input.select-sort")).attr('checked') != undefined){
+            		selected.push(_sort);
+            	}
+            });
+            // console.log(selected);
+           	download_csv('pile_sort_data', selected);
+        }); 
+    }
 
 	//update the hidden field of checkboxes (this is done for easier form submitting)
 	function handle_checkboxes(){
@@ -835,6 +876,76 @@
 
 		return str.join(" ");
 	}
+
+	function download_csv(strFileName, selected_sorts){
+        //create data string from tables
+        var strData = "";
+        $.each(selected_sorts, function(i, _sort){
+
+	 		var strData1 = $(_sort).find("#question-table").table2CSV({
+	            delivery: 'value',
+	            // header:["Questions"],
+	        });
+
+	        var strData2 = $(_sort).find("#pile-table").table2CSV({
+	            delivery: 'value',
+	            // header:["Piles"],
+	        });
+
+	        var strData3 = $(_sort).find("#card-table").table2CSV({
+	            delivery: 'value',
+	            header:["Cards"]
+	        });
+
+	        strData += $(_sort).find(".title.sort-title").text().trim() + '\n\n' + $(_sort).find(".date").text().trim() + '\n\n' + strData1 + '\n\n' + strData2 + '\n\n' + strData3 + '\n\n';
+
+        });
+
+        var strMimeType = "text/csv";
+        var D = document,
+        a = D.createElement("a");
+        strMimeType= strMimeType || "application/octet-stream";
+        strFileName += ".csv";
+
+        if (navigator.msSaveBlob) { // IE10
+            return navigator.msSaveBlob(new Blob([strData], {type: strMimeType}), strFileName);
+        } /* end if(navigator.msSaveBlob) */
+
+
+        if ('download' in a) { //html5 A[download]
+            console.log("csv2");
+            a.href = "data:" + strMimeType + "," + encodeURIComponent(strData);
+            a.setAttribute("download", strFileName);
+            a.innerHTML = "downloading...";
+            D.body.appendChild(a);
+            setTimeout(function() {
+                a.click();
+                D.body.removeChild(a);
+            }, 66);
+            return true;
+        } /* end if('download' in a) */
+
+
+        //do iframe dataURL download (old ch+FF):
+        var f = D.createElement("iframe");
+        D.body.appendChild(f);
+        f.src = "data:" +  strMimeType   + "," + encodeURIComponent(strData);
+
+        //hack for safari
+        //see https://stackoverflow.com/questions/7944460/detect-safari-browser
+        //and https://stackoverflow.com/questions/12802109/download-blobs-locally-using-safari
+        if(navigator.vendor && navigator.vendor.indexOf('Apple') > -1 && navigator.userAgent && !navigator.userAgent.match('CriOS')){
+            console.log("safari!");
+
+            window.open('data:application/json;charset=utf-8,' + encodeURIComponent(strData), '_blank');
+        }
+        
+
+        setTimeout(function() {
+            D.body.removeChild(f);
+        }, 333);
+        return true;
+    }
 
 
 })(jQuery)

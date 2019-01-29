@@ -234,6 +234,9 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 		$(".study-submit").click(function(e){
 			e.preventDefault();
 			e.stopImmediatePropagation();
+
+			$('#submit_modal').fadeIn();
+			do_spinner("#submit_modal", "in");
 		
 			//validate study
 				//required questions
@@ -253,10 +256,13 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			        success:function(response) {
 			            // This outputs the result of the ajax request
 			            // console.log("SUCCESS");
+			            // do_spinner("#submit_modal", "out");
+			            window.location.reload(false); 
 			            console.log(response);
 			        },
 			        error: function(errorThrown){
 			        	// console.log("ERROR");
+			        	do_spinner("#submit_modal", "out");
 			            console.log(errorThrown);
 			        }
 			    });
@@ -312,6 +318,18 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 	function htmlDecode(input){
 	  var doc = new DOMParser().parseFromString(input, "text/html");
 	  return doc.documentElement.textContent;
+	}
+
+	function do_spinner(container, mode){
+		console.log("loading");
+		//test if vimeo loaded
+
+		if(mode == "in"){
+			$(container).find(".anthrohack-preloader").fadeIn();
+		}else{
+			$(container).find(".anthrohack-preloader").fadeOut();
+		}
+
 	}
 
 })(jQuery)

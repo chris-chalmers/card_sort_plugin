@@ -53,7 +53,7 @@ function anthrohack_submissions_page(){
 				<select id="studies_picker">
 					<option value="all" >All studies</option>
 					<?php foreach ($studies as $study) {
-						echo '<option value="'.$study->name.'" >'.$study->post_title.'</option>';
+						echo '<option value="'.$study->ID.'" >'.$study->post_title.'</option>';
 					} ?>
 				</select>
 			</div>
@@ -83,14 +83,14 @@ function anthrohack_submissions_page(){
 
 			<div class="sort" data-id="<?php echo $sort->ID; ?>" data-study_id="<?php echo $sort_meta['study_id'][0]; ?>">		
 				
-
+				<h3 class="title sort-title"><?php echo $sort->post_title; ?></h3>
 				<div class="submission-meta">
 
 					<div class="submission-select">
 						<label for="select_sort_<?php echo $sort->ID; ?>"><input type="checkbox" class="select-sort" id="select_sort_<?php echo $sort->ID; ?>"> Select</label>
 					</div>
 
-					<div class="date"><label>Submission date: </label><?php echo get_the_date( 'D M j' , $sort->ID); ?></div>
+					<div class="date"><label>Submission date: </label><?php echo get_the_date( 'D M j' , $sort->ID) . " at " . get_the_time("", $sort->ID); ?></div>
 					<div class="study"><label>Study: </label><a href="<?php echo $study_edit_link; ?>" target="_blank"><?php echo $study->post_title; ?></a></div>
 				</div>
 
@@ -155,12 +155,14 @@ function anthrohack_submissions_page(){
 					<h4 class="title">Cards</h4>
 					<table id="card-table" >
 						<tr>
-							<th>Name</th><th>ID #</th>
+							<th>ID #</th><th>Name</th>
 						</tr>
-						<?php foreach ($study_cards as $card) { ?>
+						<?php 
+						asort($study_cards);
+						foreach ($study_cards as $card) { ?>
 							<tr>
-								<td><?php echo $card['card_title'] ?></td>
 								<td><?php echo $card['card_id'] ?></td>
+								<td><?php echo $card['card_title'] ?></td>
 							</tr>
 						<?php } ?>
 					</table>

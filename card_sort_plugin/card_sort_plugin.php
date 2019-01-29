@@ -74,6 +74,7 @@ if ( ! function_exists( 'anthrohack_enqueue_admin' ) ) :
 
 		// wp_enqueue_script('suggest');
 		wp_enqueue_script( 'wp-color-picker');
+        wp_enqueue_script('table2csv', plugins_url( '/includes/js/table2CSV.js' , __FILE__ ), array( 'jquery' ), false, true );
 		wp_enqueue_script('image_upload', plugins_url( '/includes/js/anthrohack_image_upload.js' , __FILE__ ), array( 'jquery' ), false, true );
 		wp_enqueue_script('validate_js', 'https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js', array('jquery'));
         wp_enqueue_script('bootstrap_slider_js', plugins_url( '/includes/js/bootstrap-slider.min.js' , __FILE__ ), array( 'jquery' ), false, true );
@@ -152,7 +153,7 @@ function anthrohack_create_post_type() {
                 'add_new_item' => 'Add New Sort',
                 'view_item' => 'View Sort'
             ),
-        'public' => true,
+        'public' => false,
         'show_in_rest' => true,
         'has_archive' => false,
         'supports' => array(),

@@ -481,7 +481,7 @@ function anthrohack_card_meta_template($card = Null){
     $anthrohack_settings = get_option( 'anthrohack_settings' );  
 
     $anthrohack_cards_fields = array(
-        array(
+         array(
             "name" => "color_scheme",
             "title" => __( 'Color Scheme', '_anthrohack_' ),
             "type" => "select",
