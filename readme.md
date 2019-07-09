@@ -1,5 +1,7 @@
 **Note:** This is a BETA VERSION of a new plugin that will be free and open source, so there will be bugs and stability issues. Some features may not work as expected on all browsers. 
 
+See the example of this plugin running [here](https://futureproduc.wpengine.com/anthrohack/study/stereotyping/).
+
 I welcome bugfixes and questions, but cannot guarantee quick response time until the official version is released. 
 
 THANK YOU!!
