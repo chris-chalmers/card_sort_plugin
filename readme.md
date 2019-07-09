@@ -1,11 +1,3 @@
----
-title: Readme
-layout: post
-author: chrischalmers1111
-permalink: /readme/
-source-id: 175SH1vR35ECCIDQJhft7Z9vw9zroXLorg4k8Y_M6d-Y
-published: true
----
 **Note:** This is a BETA VERSION of a new plugin that will be free and open source, so there will be bugs and stability issues. Some features may not work as expected on all browsers. 
 
 I welcome bugfixes and questions, but cannot guarantee quick response time until the official version is released. 
