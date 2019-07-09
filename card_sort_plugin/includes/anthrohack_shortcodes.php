@@ -31,11 +31,13 @@ if ( ! function_exists( 'anthrohack_shortcode_study' ) ) :
             'class' => '',
             'show_title' => 'false',
         ), $atts));         
-
+        $id= 95;
         if($id != ""){
 
             $loop = new WP_Query( array( 'post_type' => 'study', 'posts_per_page' => 1, 'id' => $id ) );                        
             while ( $loop->have_posts() ) : $loop->the_post(); 
+
+                ob_start();
 
                 global $post; 
                 if($show_title && $show_title != 'false')
@@ -44,6 +46,11 @@ if ( ! function_exists( 'anthrohack_shortcode_study' ) ) :
                 $path = plugin_base_path() . '/templates/content-study.php';
                 if ( file_exists( $path ))
                     require $path;
+                if($echo){
+                    echo ob_get_clean();
+                }else{
+                    return ob_get_clean();
+                }
 
             endwhile;
             wp_reset_postdata();

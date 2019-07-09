@@ -32,7 +32,7 @@ include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_options.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_shortcodes.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_metaboxes.php');
 include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_ajax.php');
-// include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
+include( plugin_dir_path( __FILE__ ) . './includes/anthrohack_rest.php');
 
 /**
 * Add the scripts and styles we'll need to frontend...
@@ -163,7 +163,6 @@ function anthrohack_create_post_type() {
         )
     );
 
-
 }//end anthrohack_create_post_type
 add_action( 'init', 'anthrohack_create_post_type' );
 
@@ -202,29 +201,9 @@ function anthrohack_sort_columns_head($defaults) {
     return $defaults;
 }
 
-// // Make these columns sortable (thank you https://wordpress.org/support/topic/viewsort-by-custom-field-in-admin-post-list/)
-function anthrohack_sort_sortable_columns() {
-  return array(
-    'study_id' => 'study_id',
-  );
-}
-
-function anthrohack_sort_columns_content($column_name, $post_ID) {
-
-    if ($column_name == 'study_id') {
-        $sort_meta = get_post_meta( $post_ID );
-        // var_dump($sort_meta);
-        echo anthrohack_check_meta_var($sort_meta, "study_id", "none"); 
-    }  
-
-}
-add_filter('manage_sort_posts_columns', 'anthrohack_sort_columns_head', 10);
-add_filter( "manage_edit-sort_sortable_columns", "anthrohack_sort_sortable_columns" );
-add_action('manage_sort_posts_custom_column', 'anthrohack_sort_columns_content', 10, 2); 
-//end custom columns
-
 /**
 * Remove SEO metaboxes from selected CPT
+* if Yoast SEO is installed
 */
 function anthrohack_remove_wp_seo_meta_boxes() {
     $custom_post_types = array('card', 'sort', 'study');
@@ -235,7 +214,7 @@ function anthrohack_remove_wp_seo_meta_boxes() {
 }
 add_action('add_meta_boxes', 'anthrohack_remove_wp_seo_meta_boxes', 100);
 
-
+// Make the new 'study' post type use a template stored in this plugin (overridable by theme)
 function anthrohack_custom_content_template($content) {
 	global $post;	
   	if ( $post->post_type == 'study' ) {

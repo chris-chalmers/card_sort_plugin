@@ -22,7 +22,7 @@ function anthrohack_meta_boxes() {
 
     add_meta_box(  
         'anthrohack_advanced_options',
-        'Default card appearance',
+        'Card Styling',
         'anthrohack_advanced_options_callback',
         'study',
         'top'
@@ -145,9 +145,19 @@ function anthrohack_study_options_callback ( $post )  {
             ),
         ); //end field_array
   
-    echo "Shortcode = [card_sort_study id=" . $post->ID . "]";
+    echo "Shortcode = [card_sort_study id=" . $post->ID . "]"; 
 
-    foreach ($anthrohack_field_array as $field_array) {
+    // Add a place for use to copy the embed code ?>
+    <div id="embed_code" class="embed-code">
+        <?php ob_start(); ?>
+            <div id="anthrohack_<?php echo $post->ID; ?>_embed" class="embed-wrapper" data-form_url="<?php echo get_site_url(); ?>/wp-json/anthrohack-v1/forms/<?php echo $post->ID; ?>" data-img_url="<?php echo plugins_url( '/images/loading.gif', __FILE__); ?>" >
+                <script type="text/javascript" src="<?php echo plugins_url( '/js/embed.js.php?id=' . $post->ID,  __FILE__); ?>"></script>
+            </div>
+        <?php echo esc_html( ob_get_clean() ); ?>
+    </div>
+    <input name="copy" type="button" class="button button-large copy-this" value="Copy code" data-target="embed_code">
+
+    <?php foreach ($anthrohack_field_array as $field_array) {
         echo anthrohack_render_meta_field($field_array);
     }
     
@@ -253,7 +263,6 @@ function anthrohack_advanced_options_callback ( $post )  {
             ),
         ); //end field_array
   
-    echo "Shortcode = [card_sort_study id=" . $post->ID . "]";
 
     foreach ($anthrohack_field_array as $field_array) {
         echo anthrohack_render_meta_field($field_array);

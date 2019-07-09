@@ -11,8 +11,19 @@
 		handle_sliders();
 		piles_visible();
 		bind_submissions_btns();
+		handle_code_buttons();
 		
 	}); //end doc ready
+
+	function handle_code_buttons(){
+		$.each($("input.button.copy-this"), function(i, _this){
+			$(_this).click(function(){
+				var target = $("#" + $(_this).data("target"));
+				var text = strip_whitespace($(target).text());
+  				copy_text_to_clipboard(text);
+			});
+		});
+	}
 
 	/**
 	 * Calls the given callback function n times with the given interval. 
@@ -33,7 +44,7 @@
 
 		$("input#select_all_sorts").change(function(){
 			if($(this).attr('checked') != undefined){
-				console.log("check all");
+				// console.log("check all");
 				$("#submissions .sort:visible input.select-sort").attr('checked','checked');
 			}else{
 				$("input.select-sort").removeAttr('checked');
@@ -77,7 +88,7 @@
 	            	}
 	            });
 
-	            console.log(selected_ids);
+	            // console.log(selected_ids);
 
 	           	if(selected_ids.length > 0){
 
