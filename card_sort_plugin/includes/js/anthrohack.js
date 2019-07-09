@@ -135,7 +135,8 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 		});
 
 		//add piles
-		$(".board-column.add-pile .btn").click(function(){
+		// $(".board-column.add-pile .btn").click(function(){
+		$(".btn.add-more-items").click(function(){
 			
 			var pile_id = $(".board .board-column.pile").length;
 			if(undefined == pile_id)
@@ -161,14 +162,14 @@ var anthrohack_update_sort_items, anthrohack_add_item_to_grid;
 			//add new pile to board from template
 			var old_template = $("#pile_template");
 			var new_pile = old_template.clone(true, true);
-			$(new_pile).insertBefore( ".board-column.add-pile" );
+			$(new_pile).insertBefore( $(".board-column")[0] );
 			$(new_pile).attr("id", "pile-" + pile_id);
 			$(new_pile).attr('data-id', pile_id);
 			$(new_pile).find(".title span").html("Pile " + pile_id);
 			$(new_pile).fadeIn();
 
-			//add pile to muuli board
-			var index = $(".board-column.add-pile").index();
+			//add pile to muuri board
+			var index = 0;//$(".board-column").length;
 			anthrohack_add_item_to_grid($(new_pile)[0], $(new_pile).find('.board-column-content')[0], index-1);
 
 			//add new modal pile to modal from template

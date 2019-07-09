@@ -168,6 +168,10 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 	</div>
 
 	<div class="study-content">
+		<div class="button-holder">
+			<button class="add-more-items btn btn-primary"><i class="icon-anthrohack-plus"></i></i>Add a pile</button>
+		</div>
+
 		<div class="board">
 
 			<?php //cards ?>
@@ -269,12 +273,9 @@ $anthrohack_settings = get_option( 'anthrohack_settings' );
 
 					</div>
 				</div>
+				
 
-				<div class="board-column add-pile" id="add_piles">
-					<div class="board-column-content">
-						<button class="add-more-items btn btn-primary"><i class="icon-anthrohack-plus"></i></i>Add a pile</button>
-					</div>
-				</div>
+				
 				
 			<?php } //end piles  ?>
 			
